@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Markdown使用说明 | The Yue</title><noscript>开启JavaScript才能访问本站哦~</noscript><link rel="icon" href="/huyue.github.io/img/avatar.png"><!-- index.css--><link rel="stylesheet" href="/huyue.github.io/css/index.css?v=1.8.6"><!-- inject head--><link rel="stylesheet" href="https://cdn2.codesign.qq.com/icons/7pOrz0WXB5ZWJPX/latest/iconfont.css"><!-- aplayer--><!-- swiper--><!-- fancybox ui--><!-- katex--><!-- Open Graph--><meta name="description" content="mrakdown使用说明一.标题语法： #这是一个一级标题（一个井号代表一个一级标题） ##这是一个二级标题（两个井号代表一个二级标题，依次类推） 快捷键 ctrl+数字键1-6可以快速将选中的文本调成对应级别的标题 ctrl+0可以快速将选中的文本调成普通文本 ctrl+记号&amp;#x2F;减号对标题"><!-- pwa--><meta name="apple-mobile-web-app-capable" content="The Yue"><meta name="theme-color" content="var(--efu-main)"><meta name="apple-mobile-web-app-status-bar-style" content="var(--efu-main)"><link rel="bookmark" href="/huyue.github.io/img/avatar.png"><link rel="apple-touch-icon" href="/huyue.github.io/img/avatar.png" sizes="180x180"><script>console.log(
+    "%c Program: Hexo %c Theme: Solitude %c Version: v1.8.6",
+    "border-radius:5px 0 0 5px;padding: 5px 10px;color:white;background:#ff3842;",
+    "padding: 5px 10px;color:white;background:#3e9f50;",
+    "border-radius:0 5px 5px 0;padding: 5px 10px;background:#0084ff;color:white;"
+);
+</script><script>(()=>{
+        const saveToLocal = {
+            set: function setWithExpiry(key, value, ttl) {
+                if (ttl === 0)
+                    return
+                const now = new Date()
+                const expiryDay = ttl * 86400000
+                const item = {
+                    value: value,
+                    expiry: now.getTime() + expiryDay
+                }
+                localStorage.setItem(key, JSON.stringify(item))
+            },
+            get: function getWithExpiry(key) {
+                const itemStr = localStorage.getItem(key)
+    
+                if (!itemStr) {
+                    return undefined
+                }
+                const item = JSON.parse(itemStr)
+                const now = new Date()
+    
+                if (now.getTime() > item.expiry) {
+                    localStorage.removeItem(key)
+                    return undefined
+                }
+                return item.value
+            }
+        };
+        window.utils = {
+            saveToLocal: saveToLocal,
+            getCSS: (url, id = false) => new Promise((resolve, reject) => {
+              const link = document.createElement('link')
+              link.rel = 'stylesheet'
+              link.href = url
+              if (id) link.id = id
+              link.onerror = reject
+              link.onload = link.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                link.onload = link.onreadystatechange = null
+                resolve()
+              }
+              document.head.appendChild(link)
+            }),
+            getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+              const script = document.createElement('script')
+              script.src = url
+              script.async = true
+              script.onerror = reject
+              script.onload = script.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                script.onload = script.onreadystatechange = null
+                resolve()
+              }
+    
+              Object.keys(attr).forEach(key => {
+                script.setAttribute(key, attr[key])
+              })
+    
+              document.head.appendChild(script)
+            }),
+            addGlobalFn: (key, fn, name = false, parent = window) => {
+                const globalFn = parent.globalFn || {}
+                const keyObj = globalFn[key] || {}
+        
+                if (name && keyObj[name]) return
+        
+                name = name || Object.keys(keyObj).length
+                keyObj[name] = fn
+                globalFn[key] = keyObj
+                parent.globalFn = globalFn
+            },
+        }
+    })()</script><!-- global head--><script>const GLOBAL_CONFIG = {
+    root: '/huyue.github.io/',
+    algolia: undefined,
+    localsearch: undefined,
+    runtime: '2024-04-16 00:00:00',
+    lazyload: {
+        enable: false,
+        error: '/img/error_load.png'
+    },
+    copyright: {"limit":50,"author":"作者: 胡越","link":"链接: ","source":"来源: The Yue","info":"著作权归作者所有。 商业转载请联系作者获得授权，非商业转载请注明出处。"},
+    highlight: {
+        enable: true,
+        limit: 200,
+        expand: true,
+        copy: true,
+        syntax: 'highlight.js'
+    },
+    randomlink: false,
+    lang: {"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"day":"天前","hour":"小时前","just":"刚刚","min":"分钟前","month":"个月前"},"f12":"开发者模式已打开，请遵循GPL协议。","totalk":"无需删除空行，直接输入评论即可"},
+    aside: {
+        sayhello: {
+            morning: '一日之计在于晨',
+            noon: '吃饱了才有力气干活',
+            afternoon: '集中精力，攻克难关',
+            night: '不要太劳累了，早睡更健康',
+            goodnight: '睡个好觉，保证精力充沛',
+        },
+        sayhello2: [],
+    },
+    covercolor: {
+        enable: false
+    },
+    comment: false,
+    lightbox: 'null',
+    post_ai: false,
+    right_menu: false,
+};</script><!-- page-config head--><script id="config-diff">var PAGE_CONFIG = {
+    is_post: true,
+    is_page: false,
+    is_home: false,
+    page: '',
+    toc: true,
+    comment: false,
+    ai_text: false,
+}</script><meta name="generator" content="Hexo 7.1.1"></head><body id="body"><!-- universe--><canvas id="universe"></canvas><!-- loading--><!-- console--><div id="console"><div class="close-btn" onclick="sco.hideConsole()"><i class="solitude st-close-fill"></i></div><div class="button-group"><div class="console-btn-item"><span class="darkmode_switchbutton" onclick="sco.switchDarkMode()" title="昼夜切换"><i class="solitude st-moon-clear-fill"></i></span></div><div class="console-btn-item" id="consoleHideAside"><span class="asideSwitch" onclick="sco.switchHideAside()" title="边栏显示控制"><i class="solitude st-side-bar-fill"></i></span></div></div><div class="console-mask" onclick="sco.hideConsole()"></div></div><!-- sidebar--><div id="sidebar" style="zoom: 1;"><div id="menu-mask" style="display: none;"></div><div id="sidebar-menus"><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/archives/"><div class="headline">文章</div><div class="length-num">1</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/tags/"><div class="headline">标签</div><div class="length-num">1</div></a></div></div></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><span class="darkmode_switchbutton menu-child" onclick="sco.switchDarkMode()"><i class="solitude st-moon-clear-fill"></i><span>显示模式</span></span></div><span class="sidebar-menu-item-title">标签</span><div class="card-widget card-tags card-archives card-webinfo card-allinfo"><div class="card-tag-cloud"><a href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/">手册<sup>1</sup></a></div></div></div></div><!-- keyboard--><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav class="show" id="nav"><div id="nav-group"><div id="blog_name"><a id="site-name" href="/huyue.github.io/" title="返回博客主页"><span class="title">胡越的博客</span></a></div><div id="page-name-mask"><div id="page-name"><a id="page-name-text" onclick="sco.toTop()">Markdown使用说明</a></div></div><div id="menus"></div><div id="nav-left"></div><div id="nav-right"><div class="nav-button" id="nav-totop" onclick="sco.toTop()"><a class="totopbtn"><i class="solitude st-arrow-up-line"></i><span id="percent">0</span></a></div><div id="toggle-menu"><a class="site-page"><i class="solitude st-menu-line"></i></a></div></div></div></nav><div class="coverdiv" id="coverdiv"><img class="nolazyload" id="post-cover" src="/huyue.github.io/img/default.png" alt="Markdown使用说明"></div><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original" title="该文章为原创文章，注意版权协议">原创</a><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/"><span class="tags-name tags-punctuation">手册</span></a></div></div></div></div><h1 class="post-title">Markdown使用说明</h1><div id="post-meta"><div class="meta-secondline"></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="mrakdown使用说明"><a href="#mrakdown使用说明" class="headerlink" title="mrakdown使用说明"></a>mrakdown使用说明</h1><h2 id="一-标题"><a href="#一-标题" class="headerlink" title="一.标题"></a>一.标题</h2><p>语法：</p>
+<p>#这是一个一级标题（一个井号代表一个一级标题）</p>
+<p>##这是一个二级标题（两个井号代表一个二级标题，依次类推）</p>
+<p>快捷键</p>
+<p>ctrl+数字键1-6可以快速将选中的文本调成对应级别的标题</p>
+<p>ctrl+0可以快速将选中的文本调成普通文本</p>
+<p>ctrl+记号&#x2F;减号对标题级别进行加减</p>
+<h2 id="二-段落"><a href="#二-段落" class="headerlink" title="二.段落"></a>二.段落</h2><h3 id="1-换行"><a href="#1-换行" class="headerlink" title="1.换行"></a>1.换行</h3><p>段落一</p>
+<p>段落二（两个段落之间的间隔比较大，写完一个段落直接按enter就可以）</p>
+<p>句子一<br>句子二（两个句子之间的间隔比较小，写完一个句子直接按shift+enter完成句子的换行）</p>
+<h3 id="2-分割线"><a href="#2-分割线" class="headerlink" title="2.分割线"></a>2.分割线</h3><p>语法：—（三个减号）或者***+回车</p>
+<p>效果：</p>
+<hr>
+<h2 id="三-文字显示"><a href="#三-文字显示" class="headerlink" title="三.文字显示"></a>三.文字显示</h2><h3 id="1-字体"><a href="#1-字体" class="headerlink" title="1.字体"></a>1.字体</h3><p>语法：</p>
+<p>粗体：用一对双星号包裹（** **）</p>
+<p>删除线：用一对双飘号包裹（~~ ~~）</p>
+<p>下划线：用一对u标签包裹（<u></u>）</p>
+<p>斜体：用一堆单星号包裹(* *）</p>
+<p>高亮：用mark标签（<mark></mark>）</p>
+<hr>
+<p>效果：</p>
+<p><strong>这是粗体</strong></p>
+<p><del>这是删除线</del></p>
+<p><u>这是下划线</u></p>
+<p><em>这是斜体</em></p>
+<p><mark>高亮</mark></p>
+<hr>
+<p>快捷键：</p>
+<p>加粗：ctrl+B</p>
+<p>删除线:shift+Alt+5</p>
+<p>下划线：ctrl+U</p>
+<p>斜体：ctrl+i</p>
+<hr>
+<p>如果要显示特殊字符 例如* 可以用转义字符\</p>
+<h3 id="2-上下标"><a href="#2-上下标" class="headerlink" title="2.上下标"></a>2.上下标</h3><p>语法：</p>
+<p>上标使用^</p>
+<p>下标~</p>
+<p>效果：</p>
+<p>x^2^</p>
+<p>H<del>2</del>O</p>
+<hr>
+<h2 id="四-列表"><a href="#四-列表" class="headerlink" title="四.列表"></a>四.列表</h2><h3 id="1-无序列表"><a href="#1-无序列表" class="headerlink" title="1.无序列表"></a>1.无序列表</h3><p>语法：</p>
+<p>*&#x2F;-&#x2F;+ 加空格</p>
+<p>效果：</p>
+<ul>
+<li>苹果</li>
+<li>香蕉</li>
+<li>橘子</li>
+</ul>
+<p>按两次回车退出列表的编辑状态</p>
+<hr>
+<p>多级分类</p>
+<p>先进入列表状态，然后再按tab键</p>
+<ul>
+<li>一级分类<ul>
+<li>二级分类<ul>
+<li>三级分类</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>如何降低分类层次 两次回车或者ctrl+[ 或者ctrl+]</p>
+<ul>
+<li>a<ul>
+<li>b<ul>
+<li>c</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>要退出可以反复回车或者shift+tab</p>
+<h3 id="2-有序列表"><a href="#2-有序列表" class="headerlink" title="2.有序列表"></a>2.有序列表</h3><p>语法：</p>
+<p>数字加.加空格</p>
+<p>效果</p>
+<ol>
+<li>aaa</li>
+<li>bbb</li>
+</ol>
+<p>其余同无序列表</p>
+<hr>
+<h3 id="3-无序列表"><a href="#3-无序列表" class="headerlink" title="3.无序列表"></a>3.无序列表</h3><p>语法：</p>
+<p>-加[ ]</p>
+<p>效果：</p>
+<ul>
+<li><input disabled="" type="checkbox"> </li>
+</ul>
+<h2 id="五-区块显示"><a href="#五-区块显示" class="headerlink" title="五.区块显示"></a>五.区块显示</h2><p>语法：</p>
+<p>右尖括号加回车</p>
+<p>效果</p>
+<blockquote>
+<blockquote>
+<blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+<hr>
+<h2 id="六-代码显示"><a href="#六-代码显示" class="headerlink" title="六.代码显示"></a>六.代码显示</h2><h3 id="1-行内代码"><a href="#1-行内代码" class="headerlink" title="1.行内代码"></a>1.行内代码</h3><blockquote>
+<p>语法：</p>
+<p>&#96;(esc下面这个点包裹起来)</p>
+</blockquote>
+<blockquote>
+<p>效果：</p>
+<p><code>int a= b</code></p>
+</blockquote>
+<blockquote>
+<p>快捷键：ctrl+shift+&#96;</p>
+</blockquote>
+<hr>
+<h3 id="2-代码块"><a href="#2-代码块" class="headerlink" title="2.代码块"></a>2.代码块</h3><blockquote>
+<p>代码</p>
+<p>三个点（esc下面的点）</p>
+</blockquote>
+<blockquote>
+<p>效果：</p>
+<figure class="highlight plaintext"><figcaption><span>a</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a = 10;</span><br><span class="line">int b = a;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>快捷键：crtrl+shift+k</p>
+</blockquote>
+<hr>
+<h2 id="七-链接"><a href="#七-链接" class="headerlink" title="七.链接"></a>七.链接</h2><blockquote>
+<p>语法</p>
+<p>直接输入网址</p>
+<p><a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></p>
+<p>想要跳转，按ctlr+点击网址实现跳转</p>
+</blockquote>
+<blockquote>
+<p>对超链接进行文字描述</p>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[百度一下](www.baidu.com)</span><br><span class="line">[百度一下](www.baidu.com &quot;www.baidu.com&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>效果</p>
+<p><a target="_blank" rel="noopener" href="https://www.baidu.com/">百度一下</a></p>
+<p><a href="www.baidu.com" title="www.baidu.com">百度一下</a></p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author_group"><a class="post-copyright__author_img" href="/huyue.github.io/about/"><img class="post-copyright__author_img_front" src="/img/pwa/favicon.ico"></a><div class="post-copyright__author_name">The Yue</div><div class="post-copyright__author_desc"></div></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div id="quit-box" onclick="RemoveRewardMask()"></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本文是原创文章，采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a>协议，完整转载请注明来自<a href="/huyue.github.io/">The Yue</a></span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/"><span class="tags-punctuation"></span>手册<span class="tagsPageCount">1</span></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><div class="author-info__top-group"><div class="author-info__sayhi" id="author-info__sayhi" onclick="sco.changeSayHelloText()">sayhello.morning</div></div></div><div class="avatar-img-group"><img class="avatar-img" alt="头像" src="https://s21.ax1x.com/2024/04/16/pFxtXtK.png"></div><div class="author-info__description_group"><div class="author-info__description">分享自己对编程的<b>热爱</b>，对美好生活的<b>向往</b>，对知识海洋<b>探索历程</b>。</div><div class="author-info__description2">相信你可以在这里找到对你有用的知识和教程。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/huyue.github.io/about/"><div class="author-info__name">胡越</div><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="solitude st-menu-line"></i><span>文章目录</span></div><div class="toc-content" id="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#mrakdown%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><span class="toc-text">mrakdown使用说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E6%A0%87%E9%A2%98"><span class="toc-text">一.标题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E6%AE%B5%E8%90%BD"><span class="toc-text">二.段落</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%8D%A2%E8%A1%8C"><span class="toc-text">1.换行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%86%E5%89%B2%E7%BA%BF"><span class="toc-text">2.分割线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E6%96%87%E5%AD%97%E6%98%BE%E7%A4%BA"><span class="toc-text">三.文字显示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AD%97%E4%BD%93"><span class="toc-text">1.字体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%8A%E4%B8%8B%E6%A0%87"><span class="toc-text">2.上下标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E5%88%97%E8%A1%A8"><span class="toc-text">四.列表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%97%A0%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-text">1.无序列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9C%89%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-text">2.有序列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%97%A0%E5%BA%8F%E5%88%97%E8%A1%A8"><span class="toc-text">3.无序列表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94-%E5%8C%BA%E5%9D%97%E6%98%BE%E7%A4%BA"><span class="toc-text">五.区块显示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-%E4%BB%A3%E7%A0%81%E6%98%BE%E7%A4%BA"><span class="toc-text">六.代码显示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%A1%8C%E5%86%85%E4%BB%A3%E7%A0%81"><span class="toc-text">1.行内代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-text">2.代码块</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83-%E9%93%BE%E6%8E%A5"><span class="toc-text">七.链接</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="solitude st-map-line"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/17/mrakdown%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" title="Markdown使用说明"><img alt="Markdown使用说明" src="/img/default.png"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/17/mrakdown%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" title="Markdown使用说明">Markdown使用说明</a></div></div></div></div></div></div></main><footer id="footer"><div id="st-footer-bar"><div class="footer-logo"><span class="solitude">胡越的博客</span></div><div class="footer-bar-description">来自The Yue - 的文章</div><a class="footer-bar-link" href="/huyue.github.io/">了解更多</a></div><div id="footer_deal"></div><div id="st-footer"></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div class="copyright">© 2024 By&nbsp;<a class="footer-bar-link" href="/huyue.github.io/">胡越</a></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/valor-x/hexo-theme-solitude" alt="主题">主题</a><a class="footer-bar-link cc" href="/huyue.github.io/null" aria-label="copyright"><i class="solitude st-copyright-line"></i><i class="solitude st-creative-commons-by-line"></i><i class="solitude st-creative-commons-nc-line"></i><i class="solitude st-creative-commons-nd-line"></i></a></div></div></div></footer></div><!-- right_menu--><!-- inject body--><div><script src="/huyue.github.io/js/utils.js?v=1.8.6"></script><script src="/huyue.github.io/js/main.js?v=1.8.6"></script><script src="/huyue.github.io/js/third_party/waterfall.min.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pjax/0.2.8/pjax.min.js"></script><script src="/huyue.github.io/js/third_party/universe.min.js?v=1.8.6"></script><script>dark()
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script><div class="js-pjax"></div></div><!-- newest comment--><!-- pjax--><script>const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: ['title','#body-wrap','#site-config','meta[name="description"]','.js-pjax','meta[property^="og:"]','#config-diff'],
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+})
+
+document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+})
+
+document.addEventListener('pjax:complete', () => {
+    window.refreshFn()
+
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+        const newScript = document.createElement('script')
+        const content = item.text || item.textContent || item.innerHTML || ""
+        Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+        newScript.appendChild(document.createTextNode(content))
+        item.parentNode.replaceChild(newScript, item)
+    })
+
+    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+})
+
+document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+        pjax.loadUrl('/404.html')
+    }
+})</script><!-- theme--><script>initTheme = () => {
+    let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const cachedMode = utils.saveToLocal.get('theme');
+    if (cachedMode === undefined) {
+        const nowMode =
+            isDarkMode ? 'dark' : 'light'
+        document.documentElement.setAttribute('data-theme', nowMode);
+    } else {
+        document.documentElement.setAttribute('data-theme', cachedMode);
+    }
+    is_rm && rm.mode(cachedMode === 'dark' && isDarkMode)
+}
+initTheme()</script><!-- google adsense--><!-- search--><!-- music--></body></html><script>const posts=["2024/04/17/mrakdown使用说明/"];function toRandomPost(){ pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]); }</script>
