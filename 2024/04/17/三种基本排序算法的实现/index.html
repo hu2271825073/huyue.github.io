@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Untitled | The Yue</title><noscript>开启JavaScript才能访问本站哦~</noscript><link rel="icon" href="/huyue.github.io/img/avatar.png"><!-- index.css--><link rel="stylesheet" href="/huyue.github.io/css/index.css?v=1.8.6"><!-- inject head--><link rel="stylesheet" href="https://cdn2.codesign.qq.com/icons/7pOrz0WXB5ZWJPX/latest/iconfont.css"><!-- aplayer--><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><!-- swiper--><!-- fancybox ui--><!-- katex--><!-- Open Graph--><meta name="description" content="title: Markdown使用说明date: 2024-4-17 09:12:00tag: 手册reprint: false 三种基本排序算法的实现1.选择排序 选择排序是一种简单直观的排序算法。其原理可以概括为： 遍历数组：从未排序的序列中选择最小（或最大）的元素。 交换位置：将该元素与序列"><!-- pwa--><meta name="apple-mobile-web-app-capable" content="The Yue"><meta name="theme-color" content="var(--efu-main)"><meta name="apple-mobile-web-app-status-bar-style" content="var(--efu-main)"><link rel="bookmark" href="/huyue.github.io/img/avatar.png"><link rel="apple-touch-icon" href="/huyue.github.io/img/avatar.png" sizes="180x180"><script>console.log(
+    "%c Program: Hexo %c Theme: Solitude %c Version: v1.8.6",
+    "border-radius:5px 0 0 5px;padding: 5px 10px;color:white;background:#ff3842;",
+    "padding: 5px 10px;color:white;background:#3e9f50;",
+    "border-radius:0 5px 5px 0;padding: 5px 10px;background:#0084ff;color:white;"
+);
+</script><script>(()=>{
+        const saveToLocal = {
+            set: function setWithExpiry(key, value, ttl) {
+                if (ttl === 0)
+                    return
+                const now = new Date()
+                const expiryDay = ttl * 86400000
+                const item = {
+                    value: value,
+                    expiry: now.getTime() + expiryDay
+                }
+                localStorage.setItem(key, JSON.stringify(item))
+            },
+            get: function getWithExpiry(key) {
+                const itemStr = localStorage.getItem(key)
+    
+                if (!itemStr) {
+                    return undefined
+                }
+                const item = JSON.parse(itemStr)
+                const now = new Date()
+    
+                if (now.getTime() > item.expiry) {
+                    localStorage.removeItem(key)
+                    return undefined
+                }
+                return item.value
+            }
+        };
+        window.utils = {
+            saveToLocal: saveToLocal,
+            getCSS: (url, id = false) => new Promise((resolve, reject) => {
+              const link = document.createElement('link')
+              link.rel = 'stylesheet'
+              link.href = url
+              if (id) link.id = id
+              link.onerror = reject
+              link.onload = link.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                link.onload = link.onreadystatechange = null
+                resolve()
+              }
+              document.head.appendChild(link)
+            }),
+            getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+              const script = document.createElement('script')
+              script.src = url
+              script.async = true
+              script.onerror = reject
+              script.onload = script.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                script.onload = script.onreadystatechange = null
+                resolve()
+              }
+    
+              Object.keys(attr).forEach(key => {
+                script.setAttribute(key, attr[key])
+              })
+    
+              document.head.appendChild(script)
+            }),
+            addGlobalFn: (key, fn, name = false, parent = window) => {
+                const globalFn = parent.globalFn || {}
+                const keyObj = globalFn[key] || {}
+        
+                if (name && keyObj[name]) return
+        
+                name = name || Object.keys(keyObj).length
+                keyObj[name] = fn
+                globalFn[key] = keyObj
+                parent.globalFn = globalFn
+            },
+        }
+    })()</script><!-- global head--><script>const GLOBAL_CONFIG = {
+    root: '/huyue.github.io/',
+    algolia: undefined,
+    localsearch: undefined,
+    runtime: '2024-04-16 00:00:00',
+    lazyload: {
+        enable: false,
+        error: '/img/error_load.png'
+    },
+    copyright: {"limit":50,"author":"作者: 胡越","link":"链接: ","source":"来源: The Yue","info":"著作权归作者所有。 商业转载请联系作者获得授权，非商业转载请注明出处。"},
+    highlight: {
+        enable: true,
+        limit: 200,
+        expand: true,
+        copy: true,
+        syntax: 'highlight.js'
+    },
+    randomlink: false,
+    lang: {"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"day":"天前","hour":"小时前","just":"刚刚","min":"分钟前","month":"个月前"},"f12":"开发者模式已打开，请遵循GPL协议。","totalk":"无需删除空行，直接输入评论即可"},
+    aside: {
+        sayhello: {
+            morning: '一日之计在于晨',
+            noon: '吃饱了才有力气干活',
+            afternoon: '集中精力，攻克难关',
+            night: '不要太劳累了，早睡更健康',
+            goodnight: '睡个好觉，保证精力充沛',
+        },
+        sayhello2: [],
+    },
+    covercolor: {
+        enable: false
+    },
+    comment: false,
+    lightbox: 'null',
+    post_ai: false,
+    right_menu: false,
+};</script><!-- page-config head--><script id="config-diff">var PAGE_CONFIG = {
+    is_post: true,
+    is_page: false,
+    is_home: false,
+    page: '',
+    toc: true,
+    comment: false,
+    ai_text: false,
+}</script><meta name="generator" content="Hexo 7.1.1"></head><body id="body"><!-- universe--><canvas id="universe"></canvas><!-- loading--><!-- console--><div id="console"><div class="close-btn" onclick="sco.hideConsole()"><i class="solitude st-close-fill"></i></div><div class="button-group"><div class="console-btn-item"><span class="darkmode_switchbutton" onclick="sco.switchDarkMode()" title="昼夜切换"><i class="solitude st-moon-clear-fill"></i></span></div><div class="console-btn-item" id="consoleHideAside"><span class="asideSwitch" onclick="sco.switchHideAside()" title="边栏显示控制"><i class="solitude st-side-bar-fill"></i></span></div><div class="console-btn-item" id="consoleMusic" onclick="sco.musicToggle()"><span class="music-switch" title="音乐开关"><i class="solitude st-disc-fill"></i></span></div></div><div class="console-mask" onclick="sco.hideConsole()"></div></div><!-- sidebar--><div id="sidebar" style="zoom: 1;"><div id="menu-mask" style="display: none;"></div><div id="sidebar-menus"><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/archives/"><div class="headline">文章</div><div class="length-num">2</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/tags/"><div class="headline">标签</div><div class="length-num">1</div></a></div></div></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><span class="darkmode_switchbutton menu-child" onclick="sco.switchDarkMode()"><i class="solitude st-moon-clear-fill"></i><span>显示模式</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-widget card-tags card-archives card-webinfo card-allinfo"><div class="card-tag-cloud"><a href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/">手册<sup>1</sup></a></div></div></div></div><!-- keyboard--><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav class="show" id="nav"><div id="nav-group"><div id="blog_name"><a id="site-name" href="/huyue.github.io/" title="返回博客主页"><span class="title">胡越的博客</span></a></div><div id="page-name-mask"><div id="page-name"><a id="page-name-text" onclick="sco.toTop()">Untitled</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div></div><div id="nav-left"></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机一篇文章" href="javascript:void(0);"><i class="solitude st-signal-tower-fill"></i></a></div><div class="nav-button" id="nav-console"><a class="console_switchbutton" onclick="sco.showConsole()" title="中控台" href="javascript:void(0);"><i class="solitude st-dashboard-fill"></i></a></div><div class="nav-button" id="nav-totop" onclick="sco.toTop()"><a class="totopbtn"><i class="solitude st-arrow-up-line"></i><span id="percent">0</span></a></div><div id="toggle-menu"><a class="site-page"><i class="solitude st-menu-line"></i></a></div></div></div></nav><div class="coverdiv" id="coverdiv"><img class="nolazyload" id="post-cover" src="/huyue.github.io/img/default.png" alt="Untitled"></div><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original" title="该文章为原创文章，注意版权协议">原创</a><div class="tag_share"><div class="post-meta__tag-list"></div></div></div></div><h1 class="post-title">Untitled</h1><div id="post-meta"><div class="meta-secondline"></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>title: Markdown使用说明<br>date: 2024-4-17 09:12:00<br>tag: 手册<br>reprint: false</p>
+<h1 id="三种基本排序算法的实现"><a href="#三种基本排序算法的实现" class="headerlink" title="三种基本排序算法的实现"></a>三种基本排序算法的实现</h1><h2 id="1-选择排序"><a href="#1-选择排序" class="headerlink" title="1.选择排序"></a>1.选择排序</h2><blockquote>
+<p>选择排序是一种简单直观的排序算法。其原理可以概括为：</p>
+<ol>
+<li><strong>遍历数组</strong>：从未排序的序列中选择最小（或最大）的元素。</li>
+<li><strong>交换位置</strong>：将该元素与序列的第一个元素（或未排序部分的第一个元素）进行交换，将其放置在已排序部分的末尾。</li>
+<li><strong>重复步骤</strong>：重复以上步骤，直到所有元素都被排序完毕。</li>
+</ol>
+<p>这样，每一次迭代都会选择未排序部分的最小（或最大）元素，依次放置在已排序部分的末尾，直到整个数组都被排序完成。因此，选择排序的时间复杂度是O(n^2)，其中n是元素的数量。虽然它的时间复杂度较高，但由于其简单性，对于小型数据集来说是一个不错的选择。</p>
+</blockquote>
+<blockquote>
+<p>代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&gt;<span class="comment">// 选择排序</span></span><br><span class="line">&gt;<span class="function"><span class="type">void</span> <span class="title">selection_sort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">   <span class="comment">/*</span></span><br><span class="line"><span class="comment">   * i表示未排序序列的开头元素</span></span><br><span class="line"><span class="comment">   * 最后一轮选择排序时, 未排序序列的开头元素是数组倒数第二个元素</span></span><br><span class="line"><span class="comment">   * i的每个取值都表示一轮选择排序</span></span><br><span class="line"><span class="comment">   * 也就是选择排序一共执行9趟</span></span><br><span class="line"><span class="comment">   */</span> </span><br><span class="line">   <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">       <span class="comment">// 不妨直接假设未排序序列的开头i位置元素就是最小值</span></span><br><span class="line">       <span class="type">int</span> min_index = i;</span><br><span class="line">       <span class="comment">// 遍历未排序数组序列,找出真正的最小值下标,此时应遍历最后一个元素</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; len; j++) &#123;</span><br><span class="line">           <span class="keyword">if</span> (arr[j] &lt; arr[min_index]) &#123;</span><br><span class="line">               min_index = j;  <span class="comment">// 记录较小值的下标</span></span><br><span class="line">           &#125;</span><br><span class="line">       &#125;   <span class="comment">// for循环结束时，未排序序列的最小值下标就是min_index</span></span><br><span class="line"></span><br><span class="line">       <span class="comment">// 交换min_index和下标i的元素</span></span><br><span class="line">       <span class="built_in">SWAP</span>(arr, min_index, i);</span><br><span class="line">       <span class="comment">// 选择排序一趟打印一次数组</span></span><br><span class="line">       <span class="built_in">print_arr</span>(arr, len);</span><br><span class="line">   &#125;</span><br><span class="line">&gt;&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="2-冒泡排序"><a href="#2-冒泡排序" class="headerlink" title="2.冒泡排序"></a>2.冒泡排序</h2><blockquote>
+<p>冒泡排序是一种简单直观的排序算法，其原理可以概括为：</p>
+<ol>
+<li><strong>比较相邻元素</strong>：从数组的起始位置开始，依次比较相邻的两个元素。</li>
+<li><strong>交换位置</strong>：如果相邻元素的顺序不符合排序规则（比如升序排序要求前面的元素小于后面的元素），则交换它们的位置。</li>
+<li><strong>重复步骤</strong>：重复以上步骤，直到没有需要交换的元素，即整个数组都已经按照排序规则排列好。</li>
+</ol>
+<p>这样，每一次迭代都会将当前未排序部分的最大元素交换到正确的位置，直到整个数组都被排序完成。冒泡排序的时间复杂度也是O(n^2)，其中n是元素的数量。尽管它在大型数据集上性能较差，但由于其简单易懂的特点，它常被用于教学和理解排序算法的基本原理。</p>
+</blockquote>
+<blockquote>
+<p>代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;<span class="function"><span class="type">void</span> <span class="title">bubble_sort</span><span class="params">(<span class="type">int</span> *num,<span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len; ++i) &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> j = len - <span class="number">1</span>; j &gt; i; --j) &#123;</span><br><span class="line">		<span class="keyword">if</span> (num[j] &lt; num[j - <span class="number">1</span>]) &#123;</span><br><span class="line">			<span class="built_in">swap</span>(&amp;num[j], &amp;num[j - <span class="number">1</span>]);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">print_num</span>(num, len);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述实现仍然有优化的空间，例如，如果某一趟冒泡排序没有交换任何元素，那么说明数组已经全部有序了，就直接退出即可。</p>
+<p>代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&gt;<span class="function"><span class="type">void</span> <span class="title">bubble_sort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">   <span class="comment">// 外层for的i表示第几轮冒泡排序,最多需要进行len-1轮</span></span><br><span class="line">   <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; len; i++) &#123;</span><br><span class="line">       <span class="comment">// 标记在这一次冒泡排序中有没有交换,false表示没有交换</span></span><br><span class="line">       <span class="type">bool</span> swapped = <span class="literal">false</span>;</span><br><span class="line">       <span class="comment">/*</span></span><br><span class="line"><span class="comment">       * j表示两两比较元素中的第一个元素的下标</span></span><br><span class="line"><span class="comment">       * 第一轮j的最大取值是数组倒数第二个元素,并且逐步减小</span></span><br><span class="line"><span class="comment">       * 所以j的条件是小于 (len - i)</span></span><br><span class="line"><span class="comment">       */</span> </span><br><span class="line">       <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; len - i; j++) &#123;</span><br><span class="line">           <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">               <span class="built_in">SWAP</span>(arr, j, j + <span class="number">1</span>);</span><br><span class="line">               <span class="comment">// 发生了交换改变标记</span></span><br><span class="line">               swapped = <span class="literal">true</span>;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">// 在一轮冒泡排序中没有任何交换,则排序已经完成,终止循环</span></span><br><span class="line">       <span class="keyword">if</span> (!swapped) &#123;</span><br><span class="line">           <span class="keyword">break</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   <span class="comment">// 打印一轮冒泡排序后数组的元素排列</span></span><br><span class="line">       <span class="built_in">print_arr</span>(arr, len);</span><br><span class="line">   &#125;</span><br><span class="line">&gt;&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="3-插入排序"><a href="#3-插入排序" class="headerlink" title="3.插入排序"></a>3.插入排序</h2><blockquote>
+<p>插入排序是一种简单直观的排序算法，其原理可以概括为：</p>
+<ol>
+<li><strong>分为已排序和未排序部分</strong>：将数组分为两部分，一部分是已排序的元素，另一部分是未排序的元素。</li>
+<li><strong>逐步将未排序元素插入已排序部分</strong>：从未排序部分取出一个元素，将它插入到已排序部分的正确位置。</li>
+<li><strong>重复步骤</strong>：重复上述过程，直到未排序部分的所有元素都被插入到已排序部分。</li>
+</ol>
+<p>具体来说，插入排序每次将未排序部分的第一个元素插入到已排序部分的合适位置，确保已排序部分始终是有序的。这样，每一轮迭代都会使已排序部分增加一个元素，最终使整个数组都被排序完成。</p>
+<p>插入排序的时间复杂度也是O(n^2)，其中n是元素的数量。尽管与选择排序和冒泡排序有相同的时间复杂度，但在实际应用中，插入排序通常比它们快，特别是在数据已经基本有序的情况下。</p>
+</blockquote>
+<blockquote>
+<p>代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//插入排序</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">insert_sort</span><span class="params">(<span class="type">int</span> *num,<span class="type">int</span> len)</span></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len<span class="number">-1</span>; ++i) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &gt; <span class="number">0</span>; --j) &#123;</span><br><span class="line">			<span class="keyword">if</span> (num[j] &lt; num[j - <span class="number">1</span>]) &#123;</span><br><span class="line">				<span class="built_in">swap</span>(&amp;num[j],&amp;num[j<span class="number">-1</span>]);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">print_num</span>(num,len);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述实现仍然有优化空间，例如每次要把元素从i+1的位置置换到目标位置的时候，途径的元素都需要进行置换，而置换需要三次赋值操作，所以可以把这个过程给优化掉，思路为记录i+1位置元素的值，然后if条件满足的时候，不进行置换，而是进行赋值，将途径位置的元素统统往后移动一个位置，最后将记录的值放在目标位置即可，这样将每个途经元素都要进行三次赋值减少为了只需要赋值一次。</p>
+<p>代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">optimized_insertion_sort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 外层for循环中的i表示每轮选择排序新插入元素的下标,也就是&quot;新摸手牌&quot;的下标</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; len; i++)&#123;</span><br><span class="line">        <span class="comment">/*使用while实现</span></span><br><span class="line"><span class="comment">        // 新插入的元素存储起来</span></span><br><span class="line"><span class="comment">        int temp = arr[i];</span></span><br><span class="line"><span class="comment">        // j代表新插入元素前面元素的下标,也就是&quot;老手牌&quot;的下表</span></span><br><span class="line"><span class="comment">        int j = i - 1;</span></span><br><span class="line"><span class="comment">        while (j &gt;= 0 &amp;&amp; arr[j] &gt; temp) &#123;</span></span><br><span class="line"><span class="comment">            // 将新插入元素前面的元素向后移动一位</span></span><br><span class="line"><span class="comment">            arr[j + 1] = arr[j];</span></span><br><span class="line"><span class="comment">            j--;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">    <span class="comment">// 上面的while循环可以改成for循环</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = i - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &gt; temp) &#123;</span><br><span class="line">        arr[j + <span class="number">1</span>] = arr[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 当 arr[j] 不再大于 temp 时，跳出循环</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * while/for循环结束时, 要么j = -1, 要么arr[j] &lt;= temp</span></span><br><span class="line"><span class="comment">        * 不管是哪种情况。temp最终都需要放入下标j + 1的位置</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        arr[j + <span class="number">1</span>] = temp;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 打印每一轮选择排序后,数组的元素序列</span></span><br><span class="line">        <span class="built_in">print_arr</span>(arr, len);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h2><h3 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h3><blockquote>
+<p>希尔排序是插入排序的一种改进版本，也被称为“缩小增量排序”。其原理可以概括为：</p>
+<ol>
+<li><strong>确定增量序列</strong>：选择一个增量序列（通常是逐渐减小的序列），用于确定每次比较的间隔。</li>
+<li><strong>按增量分组插入排序</strong>：将数组按照指定的增量分成若干个子序列，对每个子序列进行插入排序。</li>
+<li><strong>逐步缩小增量</strong>：重复上述步骤，每次减小增量，直到增量为1。</li>
+<li><strong>最终排序</strong>：当增量减小至1时，整个数组已经基本有序，此时再进行一次插入排序即可完成最终的排序。</li>
+</ol>
+<p>希尔排序的关键在于增量序列的选择，不同的增量序列会导致不同的性能。常见的增量序列有希尔增量序列（如Knuth序列）、Sedgewick增量序列等。</p>
+<p>相比于简单的插入排序，希尔排序在初始阶段以较大的步长进行排序，能够更快地将较小的元素移动到正确的位置，从而加速整体排序过程。尽管希尔排序的时间复杂度没有一个确定的数学表达式，但其平均时间复杂度约为O(n log n)到O(n^2)之间，取决于增量序列的选择。</p>
+</blockquote>
+<blockquote>
+<p>代码实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_arr</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, arr[i]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">shell_sort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> len)</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> gap = len &gt;&gt; <span class="number">1</span>;</span><br><span class="line">  <span class="comment">// 增量序列大于0就继续进行希尔排序</span></span><br><span class="line">  <span class="keyword">while</span> (gap &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">// 希尔排序就是根据增量不同进行多次插入排序罢了</span></span><br><span class="line">    <span class="comment">// gap在for循环里表示插入排序待插入元素的下标(也就是新摸的手牌)</span></span><br><span class="line">    <span class="comment">// 当gap=1时，就是一个普通插入排序</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = gap; i &lt; len; i++) &#123;   <span class="comment">// 这个i没有必要i+=gap,因为第一个摸到的牌是gap，第二个人摸到的是gap+1....</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// 用一个temp记录待插入元素</span></span><br><span class="line">      <span class="type">int</span> temp = arr[i];</span><br><span class="line">      <span class="comment">// j代表同一个分组内插入排序需要比较的前面元素的下标</span></span><br><span class="line">      <span class="type">int</span> j = i - gap;</span><br><span class="line">      <span class="comment">// 内层循环实现插入排序的逻辑,只要j元素存在且j元素大于后面的待插入元素,就向后移动元素</span></span><br><span class="line">      <span class="keyword">while</span> (j &gt;= <span class="number">0</span> &amp;&amp; arr[j] &gt; temp) &#123;</span><br><span class="line">        <span class="comment">// 将&quot;旧手牌&quot;向后移动增量gap个位置</span></span><br><span class="line">        arr[j + gap] = arr[j];</span><br><span class="line">        <span class="comment">// gap增量用于分组,所以j一次性减少gap增量</span></span><br><span class="line">        j -= gap;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 上面一段改成for循环</span></span><br><span class="line">      <span class="type">int</span> temp = arr[i];</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> j = i - gap; j &gt;= <span class="number">0</span>; j -= gap) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[j] &gt; temp) &#123;</span><br><span class="line">          arr[j + gap] = arr[j];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 上面while循环结束时,要么j是一个负数了,要么j位置的元素小于等于temp</span></span><br><span class="line">      <span class="comment">// 不论是哪一种情况,都意味着需要将j的下一个gap位置插入temp</span></span><br><span class="line">      arr[j + gap] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 每希尔排序一轮,增量减半</span></span><br><span class="line">    gap &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 打印每一轮希尔排序后的数组元素</span></span><br><span class="line">    <span class="built_in">print_arr</span>(arr, len);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author_group"><a class="post-copyright__author_img" href="/huyue.github.io/about/"><img class="post-copyright__author_img_front" src="/img/pwa/favicon.ico"></a><div class="post-copyright__author_name">The Yue</div><div class="post-copyright__author_desc"></div></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div id="quit-box" onclick="RemoveRewardMask()"></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本文是原创文章，采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a>协议，完整转载请注明来自<a href="/huyue.github.io/">The Yue</a></span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__tag-list"></div></div></div><nav class="needEndHide pagination-post" id="pagination"><div class="next-post pull-full"><a href="/huyue.github.io/2024/04/17/mrakdown%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Markdown使用说明</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><div class="author-info__top-group"><div class="author-info__sayhi" id="author-info__sayhi" onclick="sco.changeSayHelloText()">sayhello.morning</div></div></div><div class="avatar-img-group"><img class="avatar-img" alt="头像" src="https://s21.ax1x.com/2024/04/16/pFxtXtK.png"></div><div class="author-info__description_group"><div class="author-info__description">分享自己对编程的<b>热爱</b>，对美好生活的<b>向往</b>，对知识海洋<b>探索历程</b>。</div><div class="author-info__description2">相信你可以在这里找到对你有用的知识和教程。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" href="/huyue.github.io/about/"><div class="author-info__name">胡越</div><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="solitude st-menu-line"></i><span>文章目录</span></div><div class="toc-content" id="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">三种基本排序算法的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><span class="toc-text">1.选择排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F"><span class="toc-text">2.冒泡排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><span class="toc-text">3.插入排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%93%E5%B1%95"><span class="toc-text">拓展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F"><span class="toc-text">希尔排序</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="solitude st-map-line"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/17/%E4%B8%89%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0/" title="Untitled"><img alt="Untitled" src="/img/default.png"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/17/%E4%B8%89%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0/" title="Untitled">Untitled</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/17/mrakdown%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" title="Markdown使用说明"><img alt="Markdown使用说明" src="/img/default.png"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/17/mrakdown%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" title="Markdown使用说明">Markdown使用说明</a></div></div></div></div></div></div></main><footer id="footer"><div id="st-footer-bar"><div class="footer-logo"><span class="solitude">胡越的博客</span></div><div class="footer-bar-description">来自The Yue - 的文章</div><a class="footer-bar-link" href="/huyue.github.io/">了解更多</a></div><div id="footer_deal"></div><div id="st-footer"></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div class="copyright">© 2024 By&nbsp;<a class="footer-bar-link" href="/huyue.github.io/">胡越</a></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/valor-x/hexo-theme-solitude" alt="主题">主题</a><a class="footer-bar-link cc" href="/huyue.github.io/null" aria-label="copyright"><i class="solitude st-copyright-line"></i><i class="solitude st-creative-commons-by-line"></i><i class="solitude st-creative-commons-nc-line"></i><i class="solitude st-creative-commons-nd-line"></i></a></div></div></div></footer></div><!-- right_menu--><!-- inject body--><div><script src="/huyue.github.io/js/utils.js?v=1.8.6"></script><script src="/huyue.github.io/js/main.js?v=1.8.6"></script><script src="/huyue.github.io/js/third_party/waterfall.min.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pjax/0.2.8/pjax.min.js"></script><script src="/huyue.github.io/js/third_party/universe.min.js?v=1.8.6"></script><script>dark()
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js"></script><script>const meting_api = 'https://meting.qjqq.cn/?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script><script src="/huyue.github.io/js/music.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script><div class="js-pjax"></div></div><!-- newest comment--><!-- pjax--><script>const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: ['title','#body-wrap','#site-config','meta[name="description"]','.js-pjax','meta[property^="og:"]','#config-diff'],
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+})
+
+document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+})
+
+document.addEventListener('pjax:complete', () => {
+    window.refreshFn()
+
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+        const newScript = document.createElement('script')
+        const content = item.text || item.textContent || item.innerHTML || ""
+        Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+        newScript.appendChild(document.createTextNode(content))
+        item.parentNode.replaceChild(newScript, item)
+    })
+
+    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+})
+
+document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+        pjax.loadUrl('/404.html')
+    }
+})</script><!-- theme--><script>initTheme = () => {
+    let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const cachedMode = utils.saveToLocal.get('theme');
+    if (cachedMode === undefined) {
+        const nowMode =
+            isDarkMode ? 'dark' : 'light'
+        document.documentElement.setAttribute('data-theme', nowMode);
+    } else {
+        document.documentElement.setAttribute('data-theme', cachedMode);
+    }
+    is_rm && rm.mode(cachedMode === 'dark' && isDarkMode)
+}
+initTheme()</script><!-- google adsense--><!-- search--><!-- music--><div class="needEndHide" id="nav-music" onclick="sco.musicToggle()"><div id="nav-music-hoverTips">音乐已暂停</div><meting-js id="584817315" server="netease" type="playlist" mutex="true" preload="none" data-lrctype="0" order="random" theme="var(--efu-main)"></meting-js></div></body></html><script>const posts=["2024/04/17/三种基本排序算法的实现/","2024/04/17/mrakdown使用说明/"];function toRandomPost(){ pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]); }</script>
