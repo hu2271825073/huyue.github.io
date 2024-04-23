@@ -1,0 +1,345 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>常用shell指令-文件相关 | The Yue</title><noscript>开启JavaScript才能访问本站哦~</noscript><link rel="icon" href="/huyue.github.io/img/avatar.png"><!-- index.css--><link rel="stylesheet" href="/huyue.github.io/css/index.css?v=1.8.6"><!-- inject head--><link rel="stylesheet" href="https://cdn2.codesign.qq.com/icons/7pOrz0WXB5ZWJPX/latest/iconfont.css"><!-- aplayer--><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><!-- swiper--><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css"><!-- fancybox ui--><!-- katex--><!-- Open Graph--><meta name="description" content="常用shell指令-文件相关一.创建文件 123$ echo &amp;quot;Hello World!&amp;quot; &amp;gt; text # 创建文件text, 并且文件中包含内容&amp;quot;Hello World!&amp;quot; &amp;gt;表示重定向输出流$ touch text1 t"><!-- pwa--><meta name="apple-mobile-web-app-capable" content="The Yue"><meta name="theme-color" content="var(--efu-main)"><meta name="apple-mobile-web-app-status-bar-style" content="var(--efu-main)"><link rel="bookmark" href="/huyue.github.io/img/avatar.png"><link rel="apple-touch-icon" href="/huyue.github.io/img/avatar.png" sizes="180x180"><script>console.log(
+    "%c Program: Hexo %c Theme: Solitude %c Version: v1.8.6",
+    "border-radius:5px 0 0 5px;padding: 5px 10px;color:white;background:#ff3842;",
+    "padding: 5px 10px;color:white;background:#3e9f50;",
+    "border-radius:0 5px 5px 0;padding: 5px 10px;background:#0084ff;color:white;"
+);
+</script><script>(()=>{
+        const saveToLocal = {
+            set: function setWithExpiry(key, value, ttl) {
+                if (ttl === 0)
+                    return
+                const now = new Date()
+                const expiryDay = ttl * 86400000
+                const item = {
+                    value: value,
+                    expiry: now.getTime() + expiryDay
+                }
+                localStorage.setItem(key, JSON.stringify(item))
+            },
+            get: function getWithExpiry(key) {
+                const itemStr = localStorage.getItem(key)
+    
+                if (!itemStr) {
+                    return undefined
+                }
+                const item = JSON.parse(itemStr)
+                const now = new Date()
+    
+                if (now.getTime() > item.expiry) {
+                    localStorage.removeItem(key)
+                    return undefined
+                }
+                return item.value
+            }
+        };
+        window.utils = {
+            saveToLocal: saveToLocal,
+            getCSS: (url, id = false) => new Promise((resolve, reject) => {
+              const link = document.createElement('link')
+              link.rel = 'stylesheet'
+              link.href = url
+              if (id) link.id = id
+              link.onerror = reject
+              link.onload = link.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                link.onload = link.onreadystatechange = null
+                resolve()
+              }
+              document.head.appendChild(link)
+            }),
+            getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+              const script = document.createElement('script')
+              script.src = url
+              script.async = true
+              script.onerror = reject
+              script.onload = script.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                script.onload = script.onreadystatechange = null
+                resolve()
+              }
+    
+              Object.keys(attr).forEach(key => {
+                script.setAttribute(key, attr[key])
+              })
+    
+              document.head.appendChild(script)
+            }),
+            addGlobalFn: (key, fn, name = false, parent = window) => {
+                const globalFn = parent.globalFn || {}
+                const keyObj = globalFn[key] || {}
+        
+                if (name && keyObj[name]) return
+        
+                name = name || Object.keys(keyObj).length
+                keyObj[name] = fn
+                globalFn[key] = keyObj
+                parent.globalFn = globalFn
+            },
+        }
+    })()</script><!-- global head--><script>const GLOBAL_CONFIG = {
+    root: '/huyue.github.io/',
+    algolia: undefined,
+    localsearch: undefined,
+    runtime: '2024-04-16 00:00:00',
+    lazyload: {
+        enable: true,
+        error: '/img/error_load.png'
+    },
+    copyright: {"limit":50,"author":"作者: 胡越","link":"链接: ","source":"来源: The Yue","info":"著作权归作者所有。 商业转载请联系作者获得授权，非商业转载请注明出处。"},
+    highlight: {
+        enable: true,
+        limit: 200,
+        expand: true,
+        copy: true,
+        syntax: 'highlight.js'
+    },
+    randomlink: false,
+    lang: {"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"day":"天前","hour":"小时前","just":"刚刚","min":"分钟前","month":"个月前"},"f12":"开发者模式已打开，请遵循GPL协议。","totalk":"无需删除空行，直接输入评论即可"},
+    aside: {
+        sayhello: {
+            morning: '一日之计在于晨',
+            noon: '吃饱了才有力气干活',
+            afternoon: '集中精力，攻克难关',
+            night: '不要太劳累了，早睡更健康',
+            goodnight: '睡个好觉，保证精力充沛',
+        },
+        sayhello2: ["🎮 电竞游戏爱好者"],
+    },
+    covercolor: {
+        enable: false
+    },
+    comment: false,
+    lightbox: 'null',
+    post_ai: false,
+    right_menu: false,
+};</script><!-- page-config head--><script id="config-diff">var PAGE_CONFIG = {
+    is_post: true,
+    is_page: false,
+    is_home: false,
+    page: '',
+    toc: true,
+    comment: false,
+    ai_text: false,
+}</script><meta name="generator" content="Hexo 7.1.1"></head><body id="body"><!-- universe--><canvas id="universe"></canvas><!-- loading--><div id="loading-box" onclick="preloader.endLoading();" style="zoom:1"><div class="loading-bg"><img class="loading-img nolazyload" src="https://api.qjqq.cn/api/MiYouShe" alt="loading image"></div></div><script>const preloader = {
+    endLoading: () => {
+        document.getElementById('loading-box').classList.toggle('loaded');
+    },
+    initLoading: () => {
+        document.getElementById('loading-box').classList.remove('loaded');
+    },
+    removePaceDone: () => {
+        document.getElementById('body').classList = 'pace-done';
+    }
+}
+window.addEventListener('load', () => {
+    preloader.endLoading();
+});
+window.addEventListener('pjax:send', () => {
+    preloader.initLoading();
+});
+document.addEventListener('pjax:complete', () => {
+    preloader.endLoading();
+});</script><!-- console--><div id="console"><div class="close-btn" onclick="sco.hideConsole()"><i class="solitude st-close-fill"></i></div><div class="button-group"><div class="console-btn-item"><span class="darkmode_switchbutton" onclick="sco.switchDarkMode()" title="昼夜切换"><i class="solitude st-moon-clear-fill"></i></span></div><div class="console-btn-item" id="consoleHideAside"><span class="asideSwitch" onclick="sco.switchHideAside()" title="边栏显示控制"><i class="solitude st-side-bar-fill"></i></span></div><div class="console-btn-item" id="consoleMusic" onclick="sco.musicToggle()"><span class="music-switch" title="音乐开关"><i class="solitude st-disc-fill"></i></span></div></div><div class="console-mask" onclick="sco.hideConsole()"></div></div><!-- sidebar--><div id="sidebar" style="zoom: 1;"><div id="menu-mask" style="display: none;"></div><div id="sidebar-menus"><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/archives/"><div class="headline">文章</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div></div></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><span class="darkmode_switchbutton menu-child" onclick="sco.switchDarkMode()"><i class="solitude st-moon-clear-fill"></i><span>显示模式</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-widget card-tags card-archives card-webinfo card-allinfo"><div class="card-tag-cloud"><a href="/huyue.github.io/tags/%E9%A1%B9%E7%9B%AE/">项目<sup>1</sup></a><a href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/">手册<sup>5</sup></a><a href="/huyue.github.io/tags/%E7%AE%97%E6%B3%95/">算法<sup>2</sup></a><a href="/huyue.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构<sup>1</sup></a><a href="/huyue.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式<sup>1</sup></a></div></div></div></div><!-- keyboard--><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav class="show" id="nav"><div id="nav-group"><div id="blog_name"><a id="site-name" href="/huyue.github.io/" title="返回博客主页"><span class="title">越の博客</span></a></div><div id="page-name-mask"><div id="page-name"><a id="page-name-text" onclick="sco.toTop()">常用shell指令-文件相关</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div></div><div id="nav-left"></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机一篇文章" href="javascript:void(0);"><i class="solitude st-signal-tower-fill"></i></a></div><div class="nav-button" id="nav-console"><a class="console_switchbutton" onclick="sco.showConsole()" title="中控台" href="javascript:void(0);"><i class="solitude st-dashboard-fill"></i></a></div><div class="nav-button" id="nav-totop" onclick="sco.toTop()"><a class="totopbtn"><i class="solitude st-arrow-up-line"></i><span id="percent">0</span></a></div><div id="toggle-menu"><a class="site-page"><i class="solitude st-menu-line"></i></a></div></div></div></nav><div class="coverdiv" id="coverdiv"><img class="nolazyload" id="post-cover" src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=700" alt="常用shell指令-文件相关"></div><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original" title="该文章为转载或翻译文章，注意版权协议">转载或翻译</a><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/"><span class="tags-name tags-punctuation">手册</span></a></div></div></div></div><h1 class="post-title">常用shell指令-文件相关</h1><div id="post-meta"><div class="meta-secondline"><span class="post-meta-date" title="发布于 2024-04-23 17:01:00"><i class="post-meta-icon solitude st-calendar-todo-fill"></i><time datetime="2024-04-23T09:01:00.000Z">2024-04-23T09:01:00.000Z</time></span><span class="post-meta-date" title="最后更新于 2024-04-23 17:02:03"><i class="post-meta-icon solitude st-refresh-line"></i><time datetime="2024-04-23T09:02:03.556Z">2024-04-23T09:02:03.556Z</time></span><span class="post-meta-position" title="作者IP归属地为武汉"><i class="post-meta-icon solitude st-map-pin-fill"></i><span>武汉</span></span><a class="post-meta-pv" href="/huyue.github.io/2024/04/23/2024-4-23-%E5%B8%B8%E7%94%A8shell%E6%8C%87%E4%BB%A4-%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3/" title="文章热度"><i class="post-meta-icon solitude st-fire-fill"></i><span id="busuanzi_value_page_pv"><i class="solitude st-loading-line"></i></span></a></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="常用shell指令-文件相关"><a href="#常用shell指令-文件相关" class="headerlink" title="常用shell指令-文件相关"></a>常用shell指令-文件相关</h1><h2 id="一-创建文件"><a href="#一-创建文件" class="headerlink" title="一.创建文件"></a>一.创建文件</h2><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ echo &quot;Hello World!&quot; &gt; text            # 创建文件text, 并且文件中包含内容&quot;Hello World!&quot; &gt;表示重定向输出流</span><br><span class="line">$ touch text1 text2 text3               # 创建空文件text1, text2, text3 (要求text1,text2,text3不存在)</span><br><span class="line">$ vim hello.c                           # 编辑hello.c, 按:wq退出。</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>echo</code>单词有回响、余音的意思，它可以直接<code>echo 字符串</code>表示将字符串输出到标准输出(一般是屏幕)中。上面指令中的<code>&gt;</code>字符是一个重定向操作符，它表示不再输出到标准输出中，而是输出到文件<code>text</code>中。若文件不存在，则会创建文件。</li>
+<li><code>touch</code>单词是触摸的意思，<code>touch 文件名...</code>作用是文件不存在则创建文件，若存在则将文件的最后修改时间更新。</li>
+<li><code>vim</code>是后续我们最常用的方式，它也可以用于创建多个文件。关于vim的详细使用，我们在后续章节继续学习。</li>
+</ol>
+</blockquote>
+<h2 id="二-查找文件"><a href="#二-查找文件" class="headerlink" title="二.查找文件"></a>二.查找文件</h2><h3 id="1-which查找可执行文件"><a href="#1-which查找可执行文件" class="headerlink" title="1.which查找可执行文件"></a>1.which查找可执行文件</h3><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ which bash        # 查看bash的路径</span><br><span class="line">$ which ls tree     # 查看命令ls和tree的路径</span><br><span class="line">$ which -a vim      # 查看vim的所有路径 (我们可能装了多个版本的vim)</span><br></pre></td></tr></table></figure>
+
+<p>which是根据PATH环境变量中的路径依次去查找的，然后显示第一个匹配项，或者显示所有匹配项</p>
+<p>效果：</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk9yTYD.png" alt="which效果"></p>
+<p>PATH环境变量是什么？</p>
+<p>PATH环境变量是一个包含一系列目录路径的变量，用于告诉操作系统 shell 在哪些目录中查找可执行文件。（Windows也有类似的）</p>
+<p>当你在终端输入一个命令时，系统会按照PATH环境变量中指定的顺序搜索这些目录，直到找到匹配的可执行文件为止。</p>
+<p>在以往我们给大家演示过一个指令：<code>./hello.py</code></p>
+<p>该指令用于执行一个可执行文件，那么你现在就可以思考一下这个指令为什么不能写成<code>hello.py</code>直接执行这个文件呢？</p>
+<p>为什么非要加一个表示当前工作目录的<code>./</code>呢？</p>
+<p>这是因为直接写<code>hello.py</code>，Linux会把整体当成一个指令去PATH环境变量下寻找可执行程序，但很明显这是找不到的，所以会报错：</p>
+<blockquote>
+<p>hello.py：未找到命令</p>
+</blockquote>
+<p>而使用了<code>./</code>就不会去PATH环境变量下寻找了，而是直接在当前工作目录下，找到当前工作目录下的可执行程序进而执行。</p>
+<p>可以使用env查看PATH环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ env</span><br></pre></td></tr></table></figure>
+
+<p>效果</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk9y5TK.png" alt="PATH环境变量"></p>
+</blockquote>
+<h3 id="2-find命令"><a href="#2-find命令" class="headerlink" title="2.find命令"></a>2.<mark>find命令</mark></h3><blockquote>
+<p>find命令可以在一个目录或者多个目录中，递归的查找符合指定条件的文件或者目录</p>
+<p>该指令可以用于查找文件，也可以用于查找目录,基本格式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">$ man find</span><br><span class="line">    find - search for files in a directory hierarchy</span><br><span class="line">    #在目录层次结构中搜索文件</span><br><span class="line">格式：</span><br><span class="line">    find [起始点...] 查找条件选项        </span><br><span class="line">    # 起始点表示查找文件从哪个目录开始，或者哪几个目录开始</span><br><span class="line">    # 起始点是可以省略的，省略后会从当前工作目录开始进行查找工作</span><br><span class="line">    # 建议不要省略起始点，若从当前目录开始查找时，可以使用 . 来表示当前目录</span><br><span class="line">常用选项：</span><br><span class="line">    -name pattern</span><br><span class="line">        #查找符合pattern名字的文件或目录</span><br><span class="line">        #pattern名字最好要使用&quot;&quot;包裹起来，这样可读性更好也能避免执行出错</span><br><span class="line">        #可以使用我们以往学习的通配符，使用通配符时必须用&quot;&quot;包裹</span><br><span class="line"></span><br><span class="line">    -type c</span><br><span class="line">        #查找类型为c的文件</span><br><span class="line">        #常见的文件类型表示字符如下：</span><br><span class="line">        #b(block): 块设备文件</span><br><span class="line">        #c(character): 字符设备文件</span><br><span class="line">        #d(directory): 目录</span><br><span class="line">        #p(named pipe): 有名管道</span><br><span class="line">        #f(file): 普通文件（和ls -l时用-表示有区别，这里要记住）</span><br><span class="line">        #l(symbolic link): 符号链接</span><br><span class="line">        #s(socket): 套接字         </span><br><span class="line"></span><br><span class="line">    -size n[单位]</span><br><span class="line">        #根据一个文件的大小进行查找</span><br><span class="line">        #n必须是一个非负数</span><br><span class="line">        #单位即内存大小的单位,如下:</span><br><span class="line">            #c: 字节</span><br><span class="line">            #w: 两个字节,即1个字</span><br><span class="line">            #b: 512个字节 (注意如果不添加单位的话,b是默认值)</span><br><span class="line">            #k: kb, 1024个字节</span><br><span class="line">            #M: Mb, 1024kb</span><br><span class="line">            #G: Gb, 1024Mb</span><br><span class="line">        #当仅填入一个非负数时,表示文件大小必须精确匹配指定的大小.如: -size 100c 表示精确查找100个字节的文件</span><br><span class="line">        #当填入一个非负数且在n前面添加正负号时, +正号表示查找大于指定大小的文件, -负号表示查找小于指定大小的文件</span><br><span class="line">        # -size +1k 表示文件大小必须大于1kb</span><br><span class="line">        # -size -100M 表示文件大小必须小于100Mb</span><br><span class="line">        #不要用这个选项查找目录, 目录的大小不是你想象中目录下所有文件和子目录大小之和，这一点上面已经讲解过了</span><br><span class="line"></span><br><span class="line">    -empty</span><br><span class="line">        #查找空的文件或空的目录文件</span><br><span class="line"></span><br><span class="line">    -user username</span><br><span class="line">    -uid uid</span><br><span class="line">        #根据用户名或者UID查找</span><br><span class="line">        #可以通过 cat /etc/passwd 命令来查看Linux用户信息,如UID</span><br><span class="line">        #也通过组名和组ID也可以查找, 但目前组基本上没人用, 这里就不赘述了</span><br><span class="line"></span><br><span class="line">    -perm 权限数字</span><br><span class="line">        #根据权限查找</span><br><span class="line">        #比较常见的权限数字,比如775,664等</span><br><span class="line"></span><br><span class="line">    #根据时间查找的选项</span><br><span class="line">    -(时间类型)(min/time) 正整数</span><br><span class="line">    #时间类型指查找依据的时间类型</span><br><span class="line">        #a(access): 文件访问的时间</span><br><span class="line">        #c(change): 文件元数据发生改变的时间</span><br><span class="line">        #m(modify): 文件内容发生改变的时间</span><br><span class="line">        #min：时间以分钟为单位</span><br><span class="line">        #time: 以天为单位</span><br><span class="line">    #n是一个整数表示对应时间，可以在n前面添加&#x27;+&#x27;和&#x27;-&#x27;，表示大于和小于</span><br><span class="line"></span><br><span class="line">    -maxdepth n</span><br><span class="line">    #指定递归搜索的深度为n</span><br><span class="line">    #若只想在当前目录下搜索，可以设定-maxdepth 1</span><br><span class="line"></span><br><span class="line">    #组合查找：</span><br><span class="line">    -a(and), -o(or), !(not)</span><br><span class="line">    #分别表示组合查找的与、或、非</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ find /usr/include -name &quot;stdio.h&quot;     # 在/usr/include目录下查找stdio.h文件</span><br><span class="line">$ find . -name &quot;*.c&quot;                    # 在当前工作目录下查找所有以.c结尾的文件</span><br><span class="line">$ find /dev -type b                     # 在/dev目录下查找所有的块设备文件</span><br><span class="line">$ find . -size 5M                       # 在当前工作目录下查找所有大小为5M的文件</span><br><span class="line">$ find . -size +5M                      # 在当前工作目录下查找所有大于5M的文件</span><br><span class="line">$ find dir1 dir2 dir3 -empty            # 在dir1,dir2,dir3目录下查找所有空的文件和空的文件夹</span><br><span class="line">$ find . -user he                       # 在当前工作目录下查找he用户拥有的文件</span><br><span class="line">$ find . -gid 0                         # 在当前工作目录下查找root组(gid=0)拥有的文件</span><br><span class="line">$ find . -perm 664                      # 在当前工作目录下查找权限为664(rw-rw-r--)的文件</span><br><span class="line">$ find . -mtime 1                       # 在当前工作目录下查找在[1, 2)天前内容发生修改的文件 (find会省略小数部分)</span><br><span class="line">$ find . -mtime +2                      # 在当前工作目录下查找在[3, +)天前内容发生修改的文件</span><br><span class="line">$ find /dev -type c -a -name &quot;tty*&quot;     # 在/dev目录下查找以tty开头的字符设备文件</span><br><span class="line">$ find /dev -type b -o -name &quot;tty*&quot;     # 在/dev目录下查找块设备文件或者是以tty开头的文件</span><br><span class="line">$ find /dev -type c -a ! -name &quot;tty*&quot;   # 在/dev目录下查找不以tty开头的字符设备文件</span><br></pre></td></tr></table></figure>
+
+<p>注意：在查找当前目录时，建议使用<code>.</code>来表示当前目录，虽然也可以直接省略。</p>
+<p><code>find</code>命令的选项很多，而且允许组合起来进行查找，此时需要使用选项<code>-a</code>表示并且，<code>-o</code>表示或者，<code>-!</code>表示否定。</p>
+<p>查找c语言模板文件就用到了find</p>
+<p>效果<img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk9yqld.png" alt="find效果"></p>
+</blockquote>
+<h3 id="3-cat查看文件内容"><a href="#3-cat查看文件内容" class="headerlink" title="3.cat查看文件内容"></a>3.cat查看文件内容</h3><blockquote>
+<p>用法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cat /etc/passwd   #在屏幕上打印用户相关的信息</span><br><span class="line">$ cat -n /etc/passwd    #在屏幕上打印用户相关的信息，显示行数</span><br><span class="line">$ sudo cat /etc/passwd /etc/shadow  #在屏幕上打印用户的密码，但密码也都是加密存储的</span><br></pre></td></tr></table></figure>
+
+<p>效果：</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk9yOOI.png" alt="cat效果"></p>
+</blockquote>
+<h3 id="4-head和tail查看文件内容首尾"><a href="#4-head和tail查看文件内容首尾" class="headerlink" title="4.head和tail查看文件内容首尾"></a>4.head和tail查看文件内容首尾</h3><blockquote>
+<p>head命令用来查看文件内容的前几行</p>
+<p>用法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ head text1                #显示text1的前10行</span><br><span class="line">$ head text1 text2 text3    #显示text1,text2,text3的前10行</span><br><span class="line">$ head -n 5 text1           #显示text1的前5行</span><br><span class="line">$ head -n -5 text1          #显示除了最后5行外的所有行</span><br></pre></td></tr></table></figure>
+
+<p>tail命令用来查看文件内容的后几行</p>
+<p>用法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ tail text1                # 显示text1的后10行</span><br><span class="line">$ tail text1 text2 text3    # 显示text1,text2,text3的后10行</span><br><span class="line">$ tail -n 5 text1           # 显示text1的后5行</span><br><span class="line">$ tail -n +5 text1          # 从第5行开始显示，直到文件末尾</span><br><span class="line">$ tail -F error.log         # 查看错误日志文件，显示后10行，并且会实时显示后续追加的数据        </span><br></pre></td></tr></table></figure>
+
+<p><mark>尤其需要处理-F选项，添加后tail会处于持续执行监听的状态，若文件末尾进行了数据追加 则会实时显示出来，这个指令常用来查看日志文件，比较常用.</mark></p>
+</blockquote>
+<h3 id="5-grep搜索文件内容"><a href="#5-grep搜索文件内容" class="headerlink" title="5.grep搜索文件内容"></a>5.<mark>grep搜索文件内容</mark></h3><blockquote>
+<p>grep是词组”globally search for a regular expression”的缩写，意为根据一个正则表达式进行全局搜索，它通常用于对文件内容进行搜索，功能十分强大，也很好用.</p>
+<p>具体而言，该指令搜索的逻辑是：</p>
+<p><strong>按正则表达式去搜索匹配文件内容，如果文件中某一行匹配指定的<mark>正则表达式</mark>，grep命令则会显示这一行。</strong></p>
+<p>惯用法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">grep -nE &quot;firmament&quot; The_Holy_Bible.txt     # 显示包含&quot;firmament&quot;的所有行内容，并显示行号</span><br><span class="line">grep -niE &quot;GOD&quot; The_Holy_Bible.txt      # 忽略大小写的显示包含&quot;GOD&quot;的所有行内容，并显示行号。</span><br><span class="line">grep -nvE &quot;god&quot; The_Holy_Bible.txt      # 显示不包含&quot;god&quot;的所有行内容，并显示行号。</span><br><span class="line">grep -cE &quot;god&quot; The_Holy_Bible.txt       # 统计文件中包含&quot;god&quot;的总行数，打印出来。不打印任何文件内容</span><br><span class="line">grep -cvE &quot;god&quot; The_Holy_Bible.txt      # 统计文件中不包含&quot;god&quot;的总行数，打印出来。不打印任何文件内容</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="三-重定向指令"><a href="#三-重定向指令" class="headerlink" title="三.重定向指令"></a>三.重定向指令</h2><blockquote>
+<p>重定向不是改变进程和缓冲区之间的关联，而是改变缓冲区和源和目的地</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk96ilj.png" alt="重定向示意图"></p>
+<p>解释一下这些重定向符号：</p>
+<ol>
+<li>&lt;：将文件的内容重定向到命令的输入，一般比较少使用。</li>
+<li>&gt;：将命令的标准输出重定向到一个文件中，如果文件已经存在，则从头覆盖文件内容。 </li>
+<li>&gt;&gt;：将命令的标准输出追加到一个文件的末尾，如果文件t不存在，则创建文件。</li>
+<li><code>2&gt; 和 2&gt;&gt;</code>类似标准输出流的重定向，只不过改成了标准错误输出。</li>
+</ol>
+<p><mark>重定向配合cat、heah、tail、echo等命令的使用</mark></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ who &gt; users       #将原本输出到屏幕上的当前用户的信息输出到文件users中</span><br><span class="line">$ echo &quot;faker is a fake&quot; &gt;&gt; users   #将原本输出到屏幕上的字符串信息追加写入到文件users中</span><br><span class="line">$ wc -l &lt; users     #将默认键盘输入重定向从文件users读取数据，它从效果上基本等价于wc users</span><br><span class="line"></span><br><span class="line"># 在file1不存在的前提下执行下列命令</span><br><span class="line"># 此时cat指令会将users的内容输出到stdout，默认打印到屏幕</span><br><span class="line"># 并且还会将file1不存在的错误信息输出到stdout，默认打印到屏幕</span><br><span class="line">$ cat users file1 &gt; text    # 重定向stdout，将users文件内容打印到文件text中</span><br><span class="line">$ cat users file1 2&gt; text   # 重定向stderr，将file1文件不存在的错误信息打印到文件text中</span><br><span class="line">$ cat users file1 &gt;&amp; text   # 同时重定向stdout和stderr，将文件内容和错误信息同步输出到文件text中</span><br></pre></td></tr></table></figure>
+
+<p><em>wc指令和重定向</em></p>
+<p>wc（word count）指令是一个用于统计输入数据中行数，单词数和字符数的指令</p>
+<p>wc后面如果不跟任何文件名，它会从标准输入（键盘）中读取数据然后进行统计</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk9yjmt.png" alt="wc键盘录入"></p>
+<p><mark>在linux中在命令输入ctrl+d表示输入EOF，结束键盘录入</mark></p>
+<p>该指令如果紧跟文件名，表示从文件中读取数据，然后输出统计的结果。</p>
+<p>比如：<code>wc text</code>和<code>wc &lt; text</code>，它们两个从效果上来说基本是等价的，如下图所示</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk9yxTf.png" alt="wc文件"></p>
+<p>发现直接跟文件名，输出结果中会多一个文件名，这是因为</p>
+<p>wc &lt; 1_text直接重定向了stdin缓冲区，wc进程只知道数据是从stdin缓冲区来的，但是他不知道数据源已经从键盘变成了文件，因此还是按键盘录入处理的，而直接跟文件名，wc 1_text的数据是来源于text的文件缓冲区的，自然直到数据源文件的名字</p>
+</blockquote>
+<h2 id="四-命令的组合"><a href="#四-命令的组合" class="headerlink" title="四.命令的组合"></a>四.命令的组合</h2><h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><blockquote>
+<p>shell命令是可以进行组合使用的，基于命令的组合，可以增强一些指令的作用。比如grep，就可以利用组合命令，大大增强它的功能。</p>
+<p>命令的组合主要有三种方式：</p>
+<ol>
+<li><code>cmd ; cmd2</code>，即两条指令间使用分号隔开，这个组合很简单就是单纯的先执行命令1，然后执行命令2。例如：<ol>
+<li><code>mkdir dir; cd dir</code></li>
+<li>先创建dir目录，然后cd进入该目录</li>
+</ol>
+</li>
+<li><mark><code>cmd1 | cmd2</code>，其中”|”是管道，整个命令表示将cmd1指令输出的结果，作为cmd2指令的输入。</mark></li>
+<li><mark><code>cmd1 | xargs cmd2</code>，表示将cmd1输出结果的每一行作为cmd2指令执行的输入参数。</mark></li>
+</ol>
+</blockquote>
+<h3 id="2-管道"><a href="#2-管道" class="headerlink" title="2.管道"></a>2.管道</h3><blockquote>
+<p><code>|</code>是字符<strong>竖线</strong>，不是大写字母I，它表示管道，管道是进程间通信的一种方式，从效果上看：</p>
+<p><code>cmd1 | cmd2</code>就表示将cmd1指令执行的输出结果，作为cmd2指令的输入。</p>
+<p>管道在这里是什么原理呢？</p>
+<p><code>cmd1</code>和<code>cmd2</code>指令的执行实际上是启动了两个进程，整个管道的原理如下图所示：</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/23/pk96Emq.png" alt="管道原理"></p>
+<p>管道是操作系统内核提供一种系统功能，它可以被想象为一个缓冲区队列，用于存储从管道一端输入的数据，直到另一端的进程读取它。</p>
+<p>管道允许数据从一个进程流向另一个进程，是进程间通信的重要手段。</p>
+<p>具体到<code>cmd1 | cmd2</code>指令：</p>
+<p>cmd1指令的进程会将stdout输出重定向到管道中，也就是cmd1进程的输出不再打印到屏幕上，而是将数据放入管道；</p>
+<p>cmd2指令的进程会将stdin输入重定向到同一管道中，也就是cmd1进程的输入不再是从键盘接收录入，而是从管道读取数据。</p>
+<p>于是<code>cmd1 | cmd2</code>指令就实现了：</p>
+<p>将cmd1指令的输出结果，作为cmd2指令的输入数据。</p>
+</blockquote>
+<h3 id="3-管道“-”应用举例"><a href="#3-管道“-”应用举例" class="headerlink" title="3.管道“|”应用举例"></a>3.管道“|”应用举例</h3><blockquote>
+<p><code>history</code>指令会将当前会话输入的shell指令的历史输出到stdout中，进而打印在屏幕上。</p>
+<p><code>tail -n 5</code>指令在不输入文件名的情况下会从stdin接收数据(默认是从键盘)，然后将后5行输出到stdout中（默认是输出到屏幕中）。</p>
+<p>现在把它们用管道组合起来，得到组合指令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">history | tail -n 5</span><br></pre></td></tr></table></figure>
+
+<p>效果是什么呢？</p>
+<p>很简单：</p>
+<p><code>history</code>指令的输出作为<code>tail -n 5</code>指令的输入，总的效果就是打印shell指令历史的后5行。</p>
+<p><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://img2.imgtp.com/2024/04/23/hC2Ebame.png" alt="管道效果"></p>
+<p><strong>再举一些例子：</strong></p>
+<p><code>ls -lh | grep -E &quot;test&quot;</code>：列出当前目录的详细列表，并通过<code>grep</code>搜索包含”test”的行。</p>
+<p><code>tail -f /var/log/server.log | grep -niE &quot;error&quot;</code>：持续显示系统日志文件中最新的内容，并且只显示包含”error”的行。</p>
+</blockquote>
+<h3 id="4-管道“-xargs”应用举例"><a href="#4-管道“-xargs”应用举例" class="headerlink" title="4.管道“| xargs”应用举例"></a>4.管道“| xargs”应用举例</h3><blockquote>
+<p>xargs 是词组”extended arguments”的缩写，意为扩展的参数。</p>
+<p>组合命令<code>cmd1 | xargs cmd2</code>的含义是：将cmd1指令输出的每一行，分别作为参数，传递给cmd2指令。</p>
+<p>使用举例：</p>
+<p>比如现在的需求是：查找当前目录下所有的.c文件，然后找到文件内容中存在main函数的行。</p>
+<p>这明显是一个组合需求：</p>
+<ol>
+<li>查找当前目录下所有的.c文件：可以用指令<code>find . -name &quot;*.c&quot;</code></li>
+<li>查找某个.c文件中存在main函数的行：可以用指令<code>grep -nE &quot;\&lt;main\(&quot; xxx.c</code></li>
+</ol>
+<p>利用xargs和管道，我们可以将这两个指令组合，得到指令：<code>find . -name &quot;*.c&quot; | xargs grep -nE &quot;\&lt;main\(&quot;</code></p>
+<p>就可以实现需求了。</p>
+<p>那么思考一下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name &quot;*.c&quot; | xargs grep -nE &quot;\&lt;main\(&quot;</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -name &quot;*.c&quot; | grep -nE &quot;\&lt;main\(&quot;</span><br></pre></td></tr></table></figure>
+
+<p>有什么区别呢？</p>
+<p>第一个是将|之前的结果都作为|后面的参数，即查找的是文件的内容，第二个是直接查找的是|找到的路径名里面的main</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author_group"><a class="post-copyright__author_img" href="/huyue.github.io/about/"><img class="post-copyright__author_img_front" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/MiYouShe"></a><div class="post-copyright__author_name">The Yue</div><div class="post-copyright__author_desc"></div></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div id="quit-box" onclick="RemoveRewardMask()"></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本文是转载或翻译文章，版权归原作者所有。转载本文请联系原作者。</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/"><span class="tags-punctuation"></span>手册<span class="tagsPageCount">5</span></a></div></div></div><nav class="needEndHide pagination-post" id="pagination"><div class="next-post pull-full"><a href="/huyue.github.io/2024/04/23/2024-4-23-%E5%B0%8F%E9%A1%B9%E7%9B%AE-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">小项目-词法分析器</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><div class="author-info__top-group"><div class="author-info__sayhi" id="author-info__sayhi" onclick="sco.changeSayHelloText()">sayhello.morning</div></div></div><div class="avatar-img-group"><img class="avatar-img" alt="头像" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/16/pFxtXtK.png"></div><div class="author-info__description_group"><div class="author-info__description">分享自己对编程的<b>热爱</b>，对美好生活的<b>向往</b>，对知识海洋<b>探索历程</b>。</div><div class="author-info__description2">相信你可以在这里找到对你有用的知识和教程。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" target="_blank" rel="noopener" href="https://github.com/hu2271825073/huyue.github.io"><div class="author-info__name">胡越</div><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="solitude st-menu-line"></i><span>文章目录</span></div><div class="toc-content" id="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8shell%E6%8C%87%E4%BB%A4-%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3"><span class="toc-text">常用shell指令-文件相关</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6"><span class="toc-text">一.创建文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E6%9F%A5%E6%89%BE%E6%96%87%E4%BB%B6"><span class="toc-text">二.查找文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-which%E6%9F%A5%E6%89%BE%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6"><span class="toc-text">1.which查找可执行文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-find%E5%91%BD%E4%BB%A4"><span class="toc-text">2.find命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-cat%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-text">3.cat查看文件内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-head%E5%92%8Ctail%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E9%A6%96%E5%B0%BE"><span class="toc-text">4.head和tail查看文件内容首尾</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-grep%E6%90%9C%E7%B4%A2%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-text">5.grep搜索文件内容</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E9%87%8D%E5%AE%9A%E5%90%91%E6%8C%87%E4%BB%A4"><span class="toc-text">三.重定向指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E5%91%BD%E4%BB%A4%E7%9A%84%E7%BB%84%E5%90%88"><span class="toc-text">四.命令的组合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="toc-text">1.概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%AE%A1%E9%81%93"><span class="toc-text">2.管道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%AE%A1%E9%81%93%E2%80%9C-%E2%80%9D%E5%BA%94%E7%94%A8%E4%B8%BE%E4%BE%8B"><span class="toc-text">3.管道“|”应用举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%AE%A1%E9%81%93%E2%80%9C-xargs%E2%80%9D%E5%BA%94%E7%94%A8%E4%B8%BE%E4%BE%8B"><span class="toc-text">4.管道“| xargs”应用举例</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="solitude st-map-line"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/23/2024-4-23-%E5%B8%B8%E7%94%A8shell%E6%8C%87%E4%BB%A4-%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3/" title="常用shell指令-文件相关"><img alt="常用shell指令-文件相关" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=700"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/23/2024-4-23-%E5%B8%B8%E7%94%A8shell%E6%8C%87%E4%BB%A4-%E6%96%87%E4%BB%B6%E7%9B%B8%E5%85%B3/" title="常用shell指令-文件相关">常用shell指令-文件相关</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/23/2024-4-23-%E5%B0%8F%E9%A1%B9%E7%9B%AE-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/" title="小项目-词法分析器"><img alt="小项目-词法分析器" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=701"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/23/2024-4-23-%E5%B0%8F%E9%A1%B9%E7%9B%AE-%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E5%99%A8/" title="小项目-词法分析器">小项目-词法分析器</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/20/vim%E7%9A%84%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E6%93%8D%E4%BD%9C/" title="vim的一些其他操作"><img alt="vim的一些其他操作" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=589"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/20/vim%E7%9A%84%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E6%93%8D%E4%BD%9C/" title="vim的一些其他操作">vim的一些其他操作</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/20/vim%E7%9A%84%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%80%BB%E7%BB%93/" title="vim的常用快捷键总结"><img alt="vim的常用快捷键总结" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=588"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/20/vim%E7%9A%84%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%80%BB%E7%BB%93/" title="vim的常用快捷键总结">vim的常用快捷键总结</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/04/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%AE%B9%E6%96%B9%E6%B3%95/" title="虚拟机扩容方法"><img alt="虚拟机扩容方法" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=666"></a><div class="content"><a class="title" href="/huyue.github.io/2024/04/19/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%89%A9%E5%AE%B9%E6%96%B9%E6%B3%95/" title="虚拟机扩容方法">虚拟机扩容方法</a></div></div></div></div></div></div></main><footer id="footer"><div id="st-footer-bar"><div class="footer-logo"><span class="solitude">越の博客</span></div><div class="footer-bar-description">来自The Yue - 的文章</div><a class="footer-bar-link" href="/huyue.github.io/">了解更多</a></div><div id="footer_deal"></div><div id="st-footer"><div class="footer-group"><h3 class="footer-title">导航</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/archives/" title="归档">归档</a><a class="footer-item" href="/huyue.github.io/categories/" title="分类">分类</a><a class="footer-item" href="/huyue.github.io/tags/" title="标签">标签</a></div></div><div class="footer-group"><h3 class="footer-title">服务</h3><div class="footer-links"><a class="footer-item" target="_blank" rel="noopener" href="https://aliyun.com/" title="阿里云">阿里云</a><a class="footer-item" target="_blank" rel="noopener" href="https://v6.51.la/" title="51la统计">51la统计</a><a class="footer-item" target="_blank" rel="noopener" href="https://tongji.baidu.com/" title="百度统计">百度统计</a></div></div><div class="footer-group"><h3 class="footer-title">支持</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/about/" title="打赏记录">打赏记录</a></div></div><div class="footer-group"><h3 class="footer-title">协议</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/cookies/" title="Cookies">Cookies</a><a class="footer-item" href="/huyue.github.io/privacy/" title="用户协议">用户协议</a><a class="footer-item" href="/huyue.github.io/copyright/" title="版权协议">版权协议</a></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div class="copyright">© 2024 By&nbsp;<a class="footer-bar-link" href="/huyue.github.io/">胡越</a></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/hu2271825073/huyue.github.io" alt="主题">主题</a><a class="footer-bar-link cc" href="/huyue.github.io/null" aria-label="copyright"><i class="solitude st-copyright-line"></i><i class="solitude st-creative-commons-by-line"></i><i class="solitude st-creative-commons-nc-line"></i><i class="solitude st-creative-commons-nd-line"></i></a></div></div></div></footer></div><!-- right_menu--><!-- inject body--><div><script src="/huyue.github.io/js/utils.js?v=1.8.6"></script><script src="/huyue.github.io/js/main.js?v=1.8.6"></script><script src="/huyue.github.io/js/third_party/waterfall.min.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pjax/0.2.8/pjax.min.js"></script><script src="/huyue.github.io/js/third_party/universe.min.js?v=1.8.6"></script><script>dark()
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/19.1.3/lazyload.iife.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js"></script><script>const meting_api = 'https://meting.qjqq.cn/?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script><script src="/huyue.github.io/js/music.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script><div class="js-pjax"><script async src="https://cdnjs.cloudflare.com/ajax/libs/busuanzi/2.3.0/bsz.pure.mini.min.js"></script></div></div><!-- newest comment--><!-- pjax--><script>const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: ['title','#body-wrap','#site-config','meta[name="description"]','.js-pjax','meta[property^="og:"]','#config-diff'],
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+})
+
+document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+})
+
+document.addEventListener('pjax:complete', () => {
+    window.refreshFn()
+
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+        const newScript = document.createElement('script')
+        const content = item.text || item.textContent || item.innerHTML || ""
+        Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+        newScript.appendChild(document.createTextNode(content))
+        item.parentNode.replaceChild(newScript, item)
+    })
+
+    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+})
+
+document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+        pjax.loadUrl('/404.html')
+    }
+})</script><!-- theme--><script>initTheme = () => {
+    const cachedMode = utils.saveToLocal.get('theme');
+    if (cachedMode === undefined)
+        document.documentElement.setAttribute('data-theme', 'dark');
+    else
+        document.documentElement.setAttribute('data-theme', cachedMode);
+    is_rm && rm.mode(cachedMode === undefined || cachedMode === 'dark')
+}
+initTheme()</script><!-- google adsense--><!-- search--><!-- music--><div class="needEndHide" id="nav-music" onclick="sco.musicToggle()"><div id="nav-music-hoverTips">音乐已暂停</div><meting-js id="584817315" server="netease" type="playlist" mutex="true" preload="none" data-lrctype="0" order="random" theme="var(--efu-main)"></meting-js></div></body></html><script>const posts=["2024/04/23/2024-4-23-常用shell指令-文件相关/","2024/04/23/2024-4-23-小项目-词法分析器/","2024/04/20/vim的一些其他操作/","2024/04/20/vim的常用快捷键总结/","2024/04/19/虚拟机扩容方法/","2024/04/18/高级排序算法/","2024/04/18/哈希表-用动态数组实现/","2024/04/17/单例模式/","2024/04/17/三种基本排序算法的实现/","2024/04/17/mrakdown使用说明/"];function toRandomPost(){ pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]); }</script>
