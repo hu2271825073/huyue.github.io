@@ -1,0 +1,229 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>c++输入输出流 | The Yue</title><noscript>开启JavaScript才能访问本站哦~</noscript><link rel="icon" href="/huyue.github.io/img/avatar.png"><!-- index.css--><link rel="stylesheet" href="/huyue.github.io/css/index.css?v=1.8.6"><!-- inject head--><link rel="stylesheet" href="https://cdn2.codesign.qq.com/icons/7pOrz0WXB5ZWJPX/latest/iconfont.css"><!-- aplayer--><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><!-- swiper--><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css"><!-- fancybox ui--><!-- katex--><!-- Open Graph--><meta name="description" content="c++输入输出流 程序的输入指将外界的数据传送到程序（内存），程序的输入是指从程序将数据传送出来，站在内存的角度来看的其实是 c++常用流类型 包含以下三个内容： (1).对系统指定的标准设备的输入和输出，即从键盘输入数据，输出到显示器屏幕，这种输入输出称为标准的输入输出，简称标准I&amp;#x2F;"><!-- pwa--><meta name="apple-mobile-web-app-capable" content="The Yue"><meta name="theme-color" content="var(--efu-main)"><meta name="apple-mobile-web-app-status-bar-style" content="var(--efu-main)"><link rel="bookmark" href="/huyue.github.io/img/avatar.png"><link rel="apple-touch-icon" href="/huyue.github.io/img/avatar.png" sizes="180x180"><script>console.log(
+    "%c Program: Hexo %c Theme: Solitude %c Version: v1.8.6",
+    "border-radius:5px 0 0 5px;padding: 5px 10px;color:white;background:#ff3842;",
+    "padding: 5px 10px;color:white;background:#3e9f50;",
+    "border-radius:0 5px 5px 0;padding: 5px 10px;background:#0084ff;color:white;"
+);
+</script><script>(()=>{
+        const saveToLocal = {
+            set: function setWithExpiry(key, value, ttl) {
+                if (ttl === 0)
+                    return
+                const now = new Date()
+                const expiryDay = ttl * 86400000
+                const item = {
+                    value: value,
+                    expiry: now.getTime() + expiryDay
+                }
+                localStorage.setItem(key, JSON.stringify(item))
+            },
+            get: function getWithExpiry(key) {
+                const itemStr = localStorage.getItem(key)
+    
+                if (!itemStr) {
+                    return undefined
+                }
+                const item = JSON.parse(itemStr)
+                const now = new Date()
+    
+                if (now.getTime() > item.expiry) {
+                    localStorage.removeItem(key)
+                    return undefined
+                }
+                return item.value
+            }
+        };
+        window.utils = {
+            saveToLocal: saveToLocal,
+            getCSS: (url, id = false) => new Promise((resolve, reject) => {
+              const link = document.createElement('link')
+              link.rel = 'stylesheet'
+              link.href = url
+              if (id) link.id = id
+              link.onerror = reject
+              link.onload = link.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                link.onload = link.onreadystatechange = null
+                resolve()
+              }
+              document.head.appendChild(link)
+            }),
+            getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+              const script = document.createElement('script')
+              script.src = url
+              script.async = true
+              script.onerror = reject
+              script.onload = script.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                script.onload = script.onreadystatechange = null
+                resolve()
+              }
+    
+              Object.keys(attr).forEach(key => {
+                script.setAttribute(key, attr[key])
+              })
+    
+              document.head.appendChild(script)
+            }),
+            addGlobalFn: (key, fn, name = false, parent = window) => {
+                const globalFn = parent.globalFn || {}
+                const keyObj = globalFn[key] || {}
+        
+                if (name && keyObj[name]) return
+        
+                name = name || Object.keys(keyObj).length
+                keyObj[name] = fn
+                globalFn[key] = keyObj
+                parent.globalFn = globalFn
+            },
+        }
+    })()</script><!-- global head--><script>const GLOBAL_CONFIG = {
+    root: '/huyue.github.io/',
+    algolia: undefined,
+    localsearch: undefined,
+    runtime: '2024-04-16 00:00:00',
+    lazyload: {
+        enable: true,
+        error: '/img/error_load.png'
+    },
+    copyright: {"limit":50,"author":"作者: 胡越","link":"链接: ","source":"来源: The Yue","info":"著作权归作者所有。 商业转载请联系作者获得授权，非商业转载请注明出处。"},
+    highlight: {
+        enable: true,
+        limit: 200,
+        expand: true,
+        copy: true,
+        syntax: 'highlight.js'
+    },
+    randomlink: false,
+    lang: {"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"day":"天前","hour":"小时前","just":"刚刚","min":"分钟前","month":"个月前"},"f12":"开发者模式已打开，请遵循GPL协议。","totalk":"无需删除空行，直接输入评论即可"},
+    aside: {
+        sayhello: {
+            morning: '一日之计在于晨',
+            noon: '吃饱了才有力气干活',
+            afternoon: '集中精力，攻克难关',
+            night: '不要太劳累了，早睡更健康',
+            goodnight: '睡个好觉，保证精力充沛',
+        },
+        sayhello2: ["🎮 电竞游戏爱好者"],
+    },
+    covercolor: {
+        enable: false
+    },
+    comment: false,
+    lightbox: 'null',
+    post_ai: false,
+    right_menu: false,
+};</script><!-- page-config head--><script id="config-diff">var PAGE_CONFIG = {
+    is_post: true,
+    is_page: false,
+    is_home: false,
+    page: '',
+    toc: true,
+    comment: false,
+    ai_text: false,
+}</script><meta name="generator" content="Hexo 7.1.1"></head><body id="body"><!-- universe--><canvas id="universe"></canvas><!-- loading--><div id="loading-box" onclick="preloader.endLoading();" style="zoom:1"><div class="loading-bg"><img class="loading-img nolazyload" src="https://api.qjqq.cn/api/MiYouShe" alt="loading image"></div></div><script>const preloader = {
+    endLoading: () => {
+        document.getElementById('loading-box').classList.toggle('loaded');
+    },
+    initLoading: () => {
+        document.getElementById('loading-box').classList.remove('loaded');
+    },
+    removePaceDone: () => {
+        document.getElementById('body').classList = 'pace-done';
+    }
+}
+window.addEventListener('load', () => {
+    preloader.endLoading();
+});
+window.addEventListener('pjax:send', () => {
+    preloader.initLoading();
+});
+document.addEventListener('pjax:complete', () => {
+    preloader.endLoading();
+});</script><!-- console--><div id="console"><div class="close-btn" onclick="sco.hideConsole()"><i class="solitude st-close-fill"></i></div><div class="button-group"><div class="console-btn-item"><span class="darkmode_switchbutton" onclick="sco.switchDarkMode()" title="昼夜切换"><i class="solitude st-moon-clear-fill"></i></span></div><div class="console-btn-item" id="consoleHideAside"><span class="asideSwitch" onclick="sco.switchHideAside()" title="边栏显示控制"><i class="solitude st-side-bar-fill"></i></span></div><div class="console-btn-item" id="consoleMusic" onclick="sco.musicToggle()"><span class="music-switch" title="音乐开关"><i class="solitude st-disc-fill"></i></span></div></div><div class="console-mask" onclick="sco.hideConsole()"></div></div><!-- sidebar--><div id="sidebar" style="zoom: 1;"><div id="menu-mask" style="display: none;"></div><div id="sidebar-menus"><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/archives/"><div class="headline">文章</div><div class="length-num">20</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div></div></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><span class="darkmode_switchbutton menu-child" onclick="sco.switchDarkMode()"><i class="solitude st-moon-clear-fill"></i><span>显示模式</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-widget card-tags card-archives card-webinfo card-allinfo"><div class="card-tag-cloud"><a href="/huyue.github.io/tags/%E9%A1%B9%E7%9B%AE/">项目<sup>1</sup></a><a href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/">手册<sup>14</sup></a><a href="/huyue.github.io/tags/%E7%AE%97%E6%B3%95/">算法<sup>2</sup></a><a href="/huyue.github.io/tags/%E5%88%86%E4%BA%AB/">分享<sup>1</sup></a><a href="/huyue.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式<sup>1</sup></a><a href="/huyue.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构<sup>1</sup></a></div></div></div></div><!-- keyboard--><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav class="show" id="nav"><div id="nav-group"><div id="blog_name"><a id="site-name" href="/huyue.github.io/" title="返回博客主页"><span class="title">越の博客</span></a></div><div id="page-name-mask"><div id="page-name"><a id="page-name-text" onclick="sco.toTop()">c++输入输出流</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div></div><div id="nav-left"></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机一篇文章" href="javascript:void(0);"><i class="solitude st-signal-tower-fill"></i></a></div><div class="nav-button" id="nav-console"><a class="console_switchbutton" onclick="sco.showConsole()" title="中控台" href="javascript:void(0);"><i class="solitude st-dashboard-fill"></i></a></div><div class="nav-button" id="nav-totop" onclick="sco.toTop()"><a class="totopbtn"><i class="solitude st-arrow-up-line"></i><span id="percent">0</span></a></div><div id="toggle-menu"><a class="site-page"><i class="solitude st-menu-line"></i></a></div></div></div></nav><div class="coverdiv" id="coverdiv"><img class="nolazyload" id="post-cover" src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=9" alt="c++输入输出流"></div><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original" title="该文章为转载或翻译文章，注意版权协议">转载或翻译</a><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/"><span class="tags-name tags-punctuation">手册</span></a></div></div></div></div><h1 class="post-title">c++输入输出流</h1><div id="post-meta"><div class="meta-secondline"><span class="post-meta-date" title="发布于 2024-06-08 10:56:00"><i class="post-meta-icon solitude st-calendar-todo-fill"></i><time datetime="2024-06-08T02:56:00.000Z">2024-06-08T02:56:00.000Z</time></span><span class="post-meta-date" title="最后更新于 2024-06-08 10:56:52"><i class="post-meta-icon solitude st-refresh-line"></i><time datetime="2024-06-08T02:56:52.744Z">2024-06-08T02:56:52.744Z</time></span><span class="post-meta-position" title="作者IP归属地为武汉"><i class="post-meta-icon solitude st-map-pin-fill"></i><span>武汉</span></span><a class="post-meta-pv" href="/huyue.github.io/2024/06/08/c++%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/" title="文章热度"><i class="post-meta-icon solitude st-fire-fill"></i><span id="busuanzi_value_page_pv"><i class="solitude st-loading-line"></i></span></a></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="c-输入输出流"><a href="#c-输入输出流" class="headerlink" title="c++输入输出流"></a>c++输入输出流</h1><blockquote>
+<p>程序的输入指将外界的数据传送到程序（内存），程序的输入是指从程序将数据传送出来，站在内存的角度来看的其实是</p>
+</blockquote>
+<h2 id="c-常用流类型"><a href="#c-常用流类型" class="headerlink" title="c++常用流类型"></a>c++常用流类型</h2><blockquote>
+<p>包含以下三个内容：</p>
+<p> (1).对系统指定的标准设备的输入和输出，即从键盘输入数据，输出到显示器屏幕，这种输入输出称为标准的输入输出，简称标准I&#x2F;O</p>
+<p>（2） 以外存磁盘文件为对象进行输入和输出，即从磁盘文件输入数据，数据输出到磁盘文件。以外存文件为对象的输入输出称为文件的输入输出，简称<strong>文件</strong> I&#x2F;O 。</p>
+<p>（3） 对内存中指定的空间进行输入和输出。通常指定一个字符数组作为存储空间（实际上可以利用该空间存储任何信息）。这种输入和输出称为字符串输入输出，简称<strong>串</strong> I&#x2F;O 。</p>
+<p>通用IO其实是包含了标准IO,文件IO和字符串IO</p>
+</blockquote>
+<h2 id="流的四种状态"><a href="#流的四种状态" class="headerlink" title="流的四种状态"></a>流的四种状态</h2><blockquote>
+<p>IO 操作与生俱来的一个问题是可能会发生错误，一些错误是可以恢复的，另一些是不可以的。在C++ 标准库中，用 iostate 来表示流的状态，不同的编译器 iostate 的实现可能不一样，不过都有四种状态：</p>
+<ul>
+<li><p><span style=color:red;background:yellow><strong>badbit <strong></span>表示发生</strong>系统级的错误</strong>，如不可恢复的读写错误。通常情况下一旦 badbit 被置位，流就无法再使用了。</p>
+</li>
+<li><p><span style=color:red;background:yellow><strong>failbit <strong></span>表示发生</strong>可恢复的错误</strong>，如期望读取一个int数值，却读出一个字符等错误。这种问题通常是可以修改的，流还可以继续使用。</p>
+</li>
+<li><p><span style=color:red;background:yellow><strong>eofbit</strong></span>表示<strong>到达流结尾位置</strong>， 流在正常输入输出的情况下结束，会被置为eofbit状态。</p>
+</li>
+<li><p><span style=color:red;background:yellow><strong>goodbit <strong></span>表示流处于</strong>有效状态</strong>。流在有效状态下，才能正常使用。如果 badbit 、 failbit 和 eofbit 任何一个被置位，则流无法正常使用。</p>
+</li>
+</ul>
+<p>这四种状态都定义在类 ios_base 中，作为其数据成员存在。在 GNU GCC7.4 的源码中，流状态的实现</p>
+<p>查看状态</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">good</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">fail</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">bad</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">eof</span>() &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> num = <span class="number">10</span>;</span><br><span class="line">    cin &gt;&gt; num;<span class="comment">//输入asdlaksjdlk的非int形，会发现进入了fail状态</span></span><br><span class="line">	cout &lt;&lt; cin.<span class="built_in">good</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">fail</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">bad</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">eof</span>() &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">checkStreamStatus</span><span class="params">(istream&amp; c)</span></span>&#123;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">good</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">fail</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">bad</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">eof</span>() &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="type">int</span> num = <span class="number">10</span>;</span><br><span class="line">    cin &gt;&gt; num;<span class="comment">//输入乱七八糟的值会发现下面的cin也不能用了</span></span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="type">int</span> num2 = <span class="number">1</span>;</span><br><span class="line">    cin &gt;&gt; num2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>恢复流的状态</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">checkStreamStatus</span><span class="params">(istream&amp; c)</span></span>&#123;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">good</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">fail</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">bad</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">eof</span>() &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="type">int</span> num = <span class="number">10</span>;</span><br><span class="line">    cin &gt;&gt; num;<span class="comment">//输入乱七八糟的值会发现下面的cin也不能用了</span></span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="keyword">if</span>(!cin.<span class="built_in">good</span>())&#123;</span><br><span class="line">        cin.<span class="built_in">clear</span>();</span><br><span class="line">    &#125;<span class="comment">//确实恢复流的状态了 ，但是发现下面的cin还是不能用，下面的cin的状态又被置为fail了</span></span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> num2 = <span class="number">1</span>;</span><br><span class="line">    cin &gt;&gt; num2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可能是缓冲区的问题，验证</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">checkStreamStatus</span><span class="params">(istream&amp; c)</span></span>&#123;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">good</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">fail</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">bad</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">eof</span>() &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="type">int</span> num = <span class="number">10</span>;</span><br><span class="line">    cin &gt;&gt; num;<span class="comment">//输入乱七八糟的值会发现下面的cin也不能用了</span></span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="keyword">if</span>(!cin.<span class="built_in">good</span>())&#123;</span><br><span class="line">        cin.<span class="built_in">clear</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    string str1;</span><br><span class="line">    cin &gt;&gt; str1;</span><br><span class="line">    <span class="comment">//验证发现确实是直接把缓冲区的数据填充到str1里面了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以不仅要恢复流的状态还需要清空缓冲区</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;limits&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">checkStreamStatus</span><span class="params">(istream&amp; c)</span></span>&#123;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">good</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">fail</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">bad</span>() &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; cin.<span class="built_in">eof</span>() &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="type">int</span> num = <span class="number">10</span>;</span><br><span class="line">    cin &gt;&gt; num;<span class="comment">//输入乱七八糟的值会发现下面的cin也不能用了</span></span><br><span class="line">    <span class="built_in">checkStreamStatus</span>(cin);</span><br><span class="line">    <span class="keyword">if</span>(!cin.<span class="built_in">good</span>())&#123;</span><br><span class="line">        cin.<span class="built_in">clear</span>();</span><br><span class="line">        cin.<span class="built_in">ignore</span>(std::numeric_limits&lt;std::streamsize::<span class="built_in">max</span>()&gt;,<span class="string">&#x27;\n&#x27;</span>);<span class="comment">//默认是清除缓冲区的一个字符</span></span><br><span class="line">        <span class="comment">//参数含义，第一个参数是表示释放多少个字符，第二个参数是指，如果释放的碰到某一个指定的字符就停止</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">   	<span class="type">int</span> num2 = <span class="number">1</span>;</span><br><span class="line">    cin &gt;&gt; num2;</span><br><span class="line">    <span class="comment">//验证发现确实是直接把缓冲区的数据填充到str1里面了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author_group"><a class="post-copyright__author_img" href="/huyue.github.io/about/"><img class="post-copyright__author_img_front" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/MiYouShe"></a><div class="post-copyright__author_name">The Yue</div><div class="post-copyright__author_desc"></div></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div id="quit-box" onclick="RemoveRewardMask()"></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本文是转载或翻译文章，版权归原作者所有。转载本文请联系原作者。</span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/"><span class="tags-punctuation"></span>手册<span class="tagsPageCount">14</span></a></div></div></div><nav class="needEndHide pagination-post" id="pagination"><div class="next-post pull-full"><a href="/huyue.github.io/2024/06/06/leetcodesql_176%20Second%20Highest%20Salary/"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">leetcode sql 176,177题总结</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><div class="author-info__top-group"><div class="author-info__sayhi" id="author-info__sayhi" onclick="sco.changeSayHelloText()">sayhello.morning</div></div></div><div class="avatar-img-group"><img class="avatar-img" alt="头像" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/16/pFxtXtK.png"></div><div class="author-info__description_group"><div class="author-info__description">分享自己对编程的<b>热爱</b>，对美好生活的<b>向往</b>，对知识海洋<b>探索历程</b>。</div><div class="author-info__description2">相信你可以在这里找到对你有用的知识和教程。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" target="_blank" rel="noopener" href="https://github.com/hu2271825073/huyue.github.io"><div class="author-info__name">胡越</div><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="solitude st-menu-line"></i><span>文章目录</span></div><div class="toc-content" id="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#c-%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81"><span class="toc-text">c++输入输出流</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#c-%E5%B8%B8%E7%94%A8%E6%B5%81%E7%B1%BB%E5%9E%8B"><span class="toc-text">c++常用流类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%9A%84%E5%9B%9B%E7%A7%8D%E7%8A%B6%E6%80%81"><span class="toc-text">流的四种状态</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="solitude st-map-line"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/06/08/c++%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/" title="c++输入输出流"><img alt="c++输入输出流" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=9"></a><div class="content"><a class="title" href="/huyue.github.io/2024/06/08/c++%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81/" title="c++输入输出流">c++输入输出流</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/06/06/leetcodesql_176%20Second%20Highest%20Salary/" title="leetcode sql 176,177题总结"><img alt="leetcode sql 176,177题总结" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=6"></a><div class="content"><a class="title" href="/huyue.github.io/2024/06/06/leetcodesql_176%20Second%20Highest%20Salary/" title="leetcode sql 176,177题总结">leetcode sql 176,177题总结</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/06/04/inline%E5%87%BD%E6%95%B0/" title="inline函数"><img alt="inline函数" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=5"></a><div class="content"><a class="title" href="/huyue.github.io/2024/06/04/inline%E5%87%BD%E6%95%B0/" title="inline函数">inline函数</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/06/04/%E8%99%9A%E5%B9%BB%E5%85%A5%E9%97%A8/" title="虚幻入门"><img alt="虚幻入门" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=5"></a><div class="content"><a class="title" href="/huyue.github.io/2024/06/04/%E8%99%9A%E5%B9%BB%E5%85%A5%E9%97%A8/" title="虚幻入门">虚幻入门</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/06/04/%E5%BC%95%E7%94%A8/" title="引用"><img alt="引用" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=4"></a><div class="content"><a class="title" href="/huyue.github.io/2024/06/04/%E5%BC%95%E7%94%A8/" title="引用">引用</a></div></div></div></div></div></div></main><footer id="footer"><div id="st-footer-bar"><div class="footer-logo"><span class="solitude">越の博客</span></div><div class="footer-bar-description">来自The Yue - 的文章</div><a class="footer-bar-link" href="/huyue.github.io/">了解更多</a></div><div id="footer_deal"></div><div id="st-footer"><div class="footer-group"><h3 class="footer-title">导航</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/archives/" title="归档">归档</a><a class="footer-item" href="/huyue.github.io/categories/" title="分类">分类</a><a class="footer-item" href="/huyue.github.io/tags/" title="标签">标签</a></div></div><div class="footer-group"><h3 class="footer-title">服务</h3><div class="footer-links"><a class="footer-item" target="_blank" rel="noopener" href="https://aliyun.com/" title="阿里云">阿里云</a><a class="footer-item" target="_blank" rel="noopener" href="https://v6.51.la/" title="51la统计">51la统计</a><a class="footer-item" target="_blank" rel="noopener" href="https://tongji.baidu.com/" title="百度统计">百度统计</a></div></div><div class="footer-group"><h3 class="footer-title">支持</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/about/" title="打赏记录">打赏记录</a></div></div><div class="footer-group"><h3 class="footer-title">协议</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/cookies/" title="Cookies">Cookies</a><a class="footer-item" href="/huyue.github.io/privacy/" title="用户协议">用户协议</a><a class="footer-item" href="/huyue.github.io/copyright/" title="版权协议">版权协议</a></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div class="copyright">© 2024 By&nbsp;<a class="footer-bar-link" href="/huyue.github.io/">胡越</a></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/hu2271825073/huyue.github.io" alt="主题">主题</a><a class="footer-bar-link cc" href="/huyue.github.io/null" aria-label="copyright"><i class="solitude st-copyright-line"></i><i class="solitude st-creative-commons-by-line"></i><i class="solitude st-creative-commons-nc-line"></i><i class="solitude st-creative-commons-nd-line"></i></a></div></div></div></footer></div><!-- right_menu--><!-- inject body--><div><script src="/huyue.github.io/js/utils.js?v=1.8.6"></script><script src="/huyue.github.io/js/main.js?v=1.8.6"></script><script src="/huyue.github.io/js/third_party/waterfall.min.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pjax/0.2.8/pjax.min.js"></script><script src="/huyue.github.io/js/third_party/universe.min.js?v=1.8.6"></script><script>dark()
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/19.1.3/lazyload.iife.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js"></script><script>const meting_api = 'https://meting.qjqq.cn/?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script><script src="/huyue.github.io/js/music.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script><div class="js-pjax"><script async src="https://cdnjs.cloudflare.com/ajax/libs/busuanzi/2.3.0/bsz.pure.mini.min.js"></script></div></div><!-- newest comment--><!-- pjax--><script>const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: ['title','#body-wrap','#site-config','meta[name="description"]','.js-pjax','meta[property^="og:"]','#config-diff'],
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+})
+
+document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+})
+
+document.addEventListener('pjax:complete', () => {
+    window.refreshFn()
+
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+        const newScript = document.createElement('script')
+        const content = item.text || item.textContent || item.innerHTML || ""
+        Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+        newScript.appendChild(document.createTextNode(content))
+        item.parentNode.replaceChild(newScript, item)
+    })
+
+    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+})
+
+document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+        pjax.loadUrl('/404.html')
+    }
+})</script><!-- theme--><script>initTheme = () => {
+    const cachedMode = utils.saveToLocal.get('theme');
+    if (cachedMode === undefined)
+        document.documentElement.setAttribute('data-theme', 'dark');
+    else
+        document.documentElement.setAttribute('data-theme', cachedMode);
+    is_rm && rm.mode(cachedMode === undefined || cachedMode === 'dark')
+}
+initTheme()</script><!-- google adsense--><!-- search--><!-- music--><div class="needEndHide" id="nav-music" onclick="sco.musicToggle()"><div id="nav-music-hoverTips">音乐已暂停</div><meting-js id="584817315" server="netease" type="playlist" mutex="true" preload="none" data-lrctype="0" order="random" theme="var(--efu-main)"></meting-js></div></body></html><script>const posts=["2024/06/08/c++输入输出流/","2024/06/06/leetcodesql_176 Second Highest Salary/","2024/06/04/inline函数/","2024/06/04/虚幻入门/","2024/06/04/引用/","2024/06/03/newdelete表达式/","2024/06/03/const关键字/","2024/05/25/分享会/","2024/05/25/sql语句/","2024/04/23/2024-4-23-常用shell指令-文件相关/","2024/04/23/2024-4-23-小项目-词法分析器/","2024/04/23/gdb调试工具使用手册/","2024/04/20/vim的一些其他操作/","2024/04/20/vim的常用快捷键总结/","2024/04/19/虚拟机扩容方法/","2024/04/18/高级排序算法/","2024/04/18/哈希表-用动态数组实现/","2024/04/17/单例模式/","2024/04/17/三种基本排序算法的实现/","2024/04/17/mrakdown使用说明/"];function toRandomPost(){ pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]); }</script>
