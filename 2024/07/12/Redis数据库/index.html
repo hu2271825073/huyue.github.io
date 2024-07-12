@@ -1,0 +1,501 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Redis的基本概念 | The Yue</title><noscript>开启JavaScript才能访问本站哦~</noscript><link rel="icon" href="/huyue.github.io/img/avatar.png"><!-- index.css--><link rel="stylesheet" href="/huyue.github.io/css/index.css?v=1.8.6"><!-- inject head--><link rel="stylesheet" href="https://cdn2.codesign.qq.com/icons/7pOrz0WXB5ZWJPX/latest/iconfont.css"><!-- aplayer--><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><!-- swiper--><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css"><!-- fancybox ui--><!-- katex--><!-- Open Graph--><meta name="description" content="一.Redis的基本概念1.关系型数据库与非关系型数据库关系型数据库：MySQL就是典型的关系型数据库，使用表结构。 非关系型数据库：redis是典型的非关系型数据库，存放数据的时候使用的是键值对的形式 2.非关系型数据库的分类基于键值对：key-value类型：Redis,memcached列存储"><!-- pwa--><meta name="apple-mobile-web-app-capable" content="The Yue"><meta name="theme-color" content="var(--efu-main)"><meta name="apple-mobile-web-app-status-bar-style" content="var(--efu-main)"><link rel="bookmark" href="/huyue.github.io/img/avatar.png"><link rel="apple-touch-icon" href="/huyue.github.io/img/avatar.png" sizes="180x180"><script>console.log(
+    "%c Program: Hexo %c Theme: Solitude %c Version: v1.8.6",
+    "border-radius:5px 0 0 5px;padding: 5px 10px;color:white;background:#ff3842;",
+    "padding: 5px 10px;color:white;background:#3e9f50;",
+    "border-radius:0 5px 5px 0;padding: 5px 10px;background:#0084ff;color:white;"
+);
+</script><script>(()=>{
+        const saveToLocal = {
+            set: function setWithExpiry(key, value, ttl) {
+                if (ttl === 0)
+                    return
+                const now = new Date()
+                const expiryDay = ttl * 86400000
+                const item = {
+                    value: value,
+                    expiry: now.getTime() + expiryDay
+                }
+                localStorage.setItem(key, JSON.stringify(item))
+            },
+            get: function getWithExpiry(key) {
+                const itemStr = localStorage.getItem(key)
+    
+                if (!itemStr) {
+                    return undefined
+                }
+                const item = JSON.parse(itemStr)
+                const now = new Date()
+    
+                if (now.getTime() > item.expiry) {
+                    localStorage.removeItem(key)
+                    return undefined
+                }
+                return item.value
+            }
+        };
+        window.utils = {
+            saveToLocal: saveToLocal,
+            getCSS: (url, id = false) => new Promise((resolve, reject) => {
+              const link = document.createElement('link')
+              link.rel = 'stylesheet'
+              link.href = url
+              if (id) link.id = id
+              link.onerror = reject
+              link.onload = link.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                link.onload = link.onreadystatechange = null
+                resolve()
+              }
+              document.head.appendChild(link)
+            }),
+            getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+              const script = document.createElement('script')
+              script.src = url
+              script.async = true
+              script.onerror = reject
+              script.onload = script.onreadystatechange = function() {
+                const loadState = this.readyState
+                if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+                script.onload = script.onreadystatechange = null
+                resolve()
+              }
+    
+              Object.keys(attr).forEach(key => {
+                script.setAttribute(key, attr[key])
+              })
+    
+              document.head.appendChild(script)
+            }),
+            addGlobalFn: (key, fn, name = false, parent = window) => {
+                const globalFn = parent.globalFn || {}
+                const keyObj = globalFn[key] || {}
+        
+                if (name && keyObj[name]) return
+        
+                name = name || Object.keys(keyObj).length
+                keyObj[name] = fn
+                globalFn[key] = keyObj
+                parent.globalFn = globalFn
+            },
+        }
+    })()</script><!-- global head--><script>const GLOBAL_CONFIG = {
+    root: '/huyue.github.io/',
+    algolia: undefined,
+    localsearch: undefined,
+    runtime: '2024-04-16 00:00:00',
+    lazyload: {
+        enable: true,
+        error: '/img/error_load.png'
+    },
+    copyright: {"limit":50,"author":"作者: 胡越","link":"链接: ","source":"来源: The Yue","info":"著作权归作者所有。 商业转载请联系作者获得授权，非商业转载请注明出处。"},
+    highlight: {
+        enable: true,
+        limit: 200,
+        expand: true,
+        copy: true,
+        syntax: 'highlight.js'
+    },
+    randomlink: false,
+    lang: {"theme":{"dark":"已切换至深色模式","light":"已切换至浅色模式"},"copy":{"success":"复制成功","error":"复制失败"},"backtop":"返回顶部","time":{"day":"天前","hour":"小时前","just":"刚刚","min":"分钟前","month":"个月前"},"f12":"开发者模式已打开，请遵循GPL协议。","totalk":"无需删除空行，直接输入评论即可"},
+    aside: {
+        sayhello: {
+            morning: '一日之计在于晨',
+            noon: '吃饱了才有力气干活',
+            afternoon: '集中精力，攻克难关',
+            night: '不要太劳累了，早睡更健康',
+            goodnight: '睡个好觉，保证精力充沛',
+        },
+        sayhello2: ["🎮 电竞游戏爱好者"],
+    },
+    covercolor: {
+        enable: false
+    },
+    comment: false,
+    lightbox: 'null',
+    post_ai: false,
+    right_menu: false,
+};</script><!-- page-config head--><script id="config-diff">var PAGE_CONFIG = {
+    is_post: true,
+    is_page: false,
+    is_home: false,
+    page: '',
+    toc: true,
+    comment: false,
+    ai_text: false,
+}</script><meta name="generator" content="Hexo 7.1.1"></head><body id="body"><!-- universe--><canvas id="universe"></canvas><!-- loading--><div id="loading-box" onclick="preloader.endLoading();" style="zoom:1"><div class="loading-bg"><img class="loading-img nolazyload" src="https://api.qjqq.cn/api/MiYouShe" alt="loading image"></div></div><script>const preloader = {
+    endLoading: () => {
+        document.getElementById('loading-box').classList.toggle('loaded');
+    },
+    initLoading: () => {
+        document.getElementById('loading-box').classList.remove('loaded');
+    },
+    removePaceDone: () => {
+        document.getElementById('body').classList = 'pace-done';
+    }
+}
+window.addEventListener('load', () => {
+    preloader.endLoading();
+});
+window.addEventListener('pjax:send', () => {
+    preloader.initLoading();
+});
+document.addEventListener('pjax:complete', () => {
+    preloader.endLoading();
+});</script><!-- console--><div id="console"><div class="close-btn" onclick="sco.hideConsole()"><i class="solitude st-close-fill"></i></div><div class="button-group"><div class="console-btn-item"><span class="darkmode_switchbutton" onclick="sco.switchDarkMode()" title="昼夜切换"><i class="solitude st-moon-clear-fill"></i></span></div><div class="console-btn-item" id="consoleHideAside"><span class="asideSwitch" onclick="sco.switchHideAside()" title="边栏显示控制"><i class="solitude st-side-bar-fill"></i></span></div><div class="console-btn-item" id="consoleMusic" onclick="sco.musicToggle()"><span class="music-switch" title="音乐开关"><i class="solitude st-disc-fill"></i></span></div></div><div class="console-mask" onclick="sco.hideConsole()"></div></div><!-- sidebar--><div id="sidebar" style="zoom: 1;"><div id="menu-mask" style="display: none;"></div><div id="sidebar-menus"><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/archives/"><div class="headline">文章</div><div class="length-num">51</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/huyue.github.io/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div></div><span class="sidebar-menu-item-title">功能</span><div class="sidebar-menu-item"><span class="darkmode_switchbutton menu-child" onclick="sco.switchDarkMode()"><i class="solitude st-moon-clear-fill"></i><span>显示模式</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div><span class="sidebar-menu-item-title">标签</span><div class="card-widget card-tags card-archives card-webinfo card-allinfo"><div class="card-tag-cloud"><a href="/huyue.github.io/tags/%E9%A1%B9%E7%9B%AE/">项目<sup>1</sup></a><a href="/huyue.github.io/tags/%E6%89%8B%E5%86%8C/">手册<sup>29</sup></a><a href="/huyue.github.io/tags/%E6%95%99%E7%A8%8B/">教程<sup>1</sup></a><a href="/huyue.github.io/tags/%E7%AC%94%E8%AE%B0/">笔记<sup>15</sup></a><a href="/huyue.github.io/tags/%E7%AE%97%E6%B3%95/">算法<sup>2</sup></a><a href="/huyue.github.io/tags/%E5%88%86%E4%BA%AB/">分享<sup>1</sup></a><a href="/huyue.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式<sup>1</sup></a><a href="/huyue.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构<sup>1</sup></a></div></div></div></div><!-- keyboard--><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav class="show" id="nav"><div id="nav-group"><div id="blog_name"><a id="site-name" href="/huyue.github.io/" title="返回博客主页"><span class="title">越の博客</span></a></div><div id="page-name-mask"><div id="page-name"><a id="page-name-text" onclick="sco.toTop()">Redis的基本概念</a></div></div><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/huyue.github.io/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>文库</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/archives/"><i class="solitude  st-folder-fill"></i><span>文章列表</span></a></li><li><a class="site-page child" href="/huyue.github.io/categories/"><i class="solitude  st-checkbox-multiple-blank-fill"></i><span>全部分类</span></a></li><li><a class="site-page child" href="/huyue.github.io/tags/"><i class="solitude  st-price-tag-fill"></i><span>全部标签</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>友链</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/moments/"><i class="solitude  st-wifi-fill"></i><span>友链鱼塘</span></a></li><li><a class="site-page child" href="/huyue.github.io/links/"><i class="solitude  st-group-fill"></i><span>友情链接</span></a></li><li><a class="site-page child" href="javascript:travelling()"><i class="solitude  st-gift-fill"></i><span>宝藏博主</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>分享</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/equipment/"><i class="solitude  st-laptop-line"></i><span>装备</span></a></li><li><a class="site-page child" href="/huyue.github.io/tlink/"><i class="solitude  st-tools-fill"></i><span>工具箱</span></a></li><li><a class="site-page child" href="/huyue.github.io/music/"><i class="solitude  st-disc-fill"></i><span>音乐馆</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><span>关于</span></a><ul class="menus_item_child"><li><a class="site-page child" href="/huyue.github.io/about/"><i class="solitude  st-contacts-fill"></i><span>关于本站</span></a></li></ul></div></div></div><div id="nav-left"></div><div id="nav-right"><div class="nav-button" id="randomPost_button"><a class="site-page" onclick="toRandomPost()" title="随机一篇文章" href="javascript:void(0);"><i class="solitude st-signal-tower-fill"></i></a></div><div class="nav-button" id="nav-console"><a class="console_switchbutton" onclick="sco.showConsole()" title="中控台" href="javascript:void(0);"><i class="solitude st-dashboard-fill"></i></a></div><div class="nav-button" id="nav-totop" onclick="sco.toTop()"><a class="totopbtn"><i class="solitude st-arrow-up-line"></i><span id="percent">0</span></a></div><div id="toggle-menu"><a class="site-page"><i class="solitude st-menu-line"></i></a></div></div></div></nav><div class="coverdiv" id="coverdiv"><img class="nolazyload" id="post-cover" src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=341" alt="Redis的基本概念"></div><div id="post-info"><div id="post-firstinfo"><div class="meta-firstline"><a class="post-meta-original" title="该文章为原创文章，注意版权协议">原创</a><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E7%AC%94%E8%AE%B0/"><span class="tags-name tags-punctuation">笔记</span></a></div></div></div></div><h1 class="post-title">Redis的基本概念</h1><div id="post-meta"><div class="meta-secondline"><span class="post-meta-date" title="发布于 2024-07-12 22:37:00"><i class="post-meta-icon solitude st-calendar-todo-fill"></i><time datetime="2024-07-12T14:37:00.000Z">2024-07-12T14:37:00.000Z</time></span><span class="post-meta-date" title="最后更新于 2024-07-12 22:37:33"><i class="post-meta-icon solitude st-refresh-line"></i><time datetime="2024-07-12T14:37:33.387Z">2024-07-12T14:37:33.387Z</time></span><span class="post-meta-position" title="作者IP归属地为武汉"><i class="post-meta-icon solitude st-map-pin-fill"></i><span>武汉</span></span><a class="post-meta-pv" href="/huyue.github.io/2024/07/12/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/" title="文章热度"><i class="post-meta-icon solitude st-fire-fill"></i><span id="busuanzi_value_page_pv"><i class="solitude st-loading-line"></i></span></a></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M -160 44 c 30 0 58 -18 88 -18 s 58 18 88 18 s 58 -18 88 -18 s 58 18 88 18 v 44 h -352 Z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一-Redis的基本概念"><a href="#一-Redis的基本概念" class="headerlink" title="一.Redis的基本概念"></a>一.Redis的基本概念</h2><h3 id="1-关系型数据库与非关系型数据库"><a href="#1-关系型数据库与非关系型数据库" class="headerlink" title="1.关系型数据库与非关系型数据库"></a>1.关系型数据库与非关系型数据库</h3><p>关系型数据库：MySQL就是典型的关系型数据库，使用表结构。</p>
+<p>非关系型数据库：redis是典型的非关系型数据库，存放数据的时候使用的是键值对的形式</p>
+<h3 id="2-非关系型数据库的分类"><a href="#2-非关系型数据库的分类" class="headerlink" title="2.非关系型数据库的分类"></a>2.非关系型数据库的分类</h3><p>基于键值对：key-value类型：Redis,memcached<br>列存储数据库：Column-oriented Graph:HBase<br>图形数据库：Graphs based:Neo4j<br>文档型数据库：MongoDB,MongoDB是一个基于分布式文件存储的数据库</p>
+<h3 id="3-Redis是什么？"><a href="#3-Redis是什么？" class="headerlink" title="3.Redis是什么？"></a>3.Redis是什么？</h3><p>是远程字典服务器的单词的缩写，使用C语言编写的，并且是开源的，性能比较高。它可以用作数据库、缓存和消息中间件，它是基于内存运行的，并支持持久化的NoSQL（非关系型）数据库</p>
+<h3 id="4-redis的特性"><a href="#4-redis的特性" class="headerlink" title="4.redis的特性"></a>4.redis的特性</h3><ul>
+<li>支持<strong>持久化</strong></li>
+<li>支持丰富的数据类型，例如：string,list,set,sort set,hash</li>
+<li>支持数据的备份，主从复制</li>
+</ul>
+<p>Redis默认支持16个数据库（就是新建后有几个默认数据库，mysql是4个）</p>
+<h3 id="5-redis的优点"><a href="#5-redis的优点" class="headerlink" title="5.redis的优点"></a>5.redis的优点</h3><ul>
+<li>性能极高，每秒钟可以读11W次，每秒钟可以写8.1w次</li>
+<li>支持丰富的数据类型，例如：string,list,set,sort set,hash</li>
+<li>原子性</li>
+<li>丰富的特性：发布订阅，key过期。</li>
+</ul>
+<h2 id="二-Redis常用命令"><a href="#二-Redis常用命令" class="headerlink" title="二.Redis常用命令"></a>二.Redis常用命令</h2><ul>
+<li>DEl key:删除key</li>
+<li>DBSIZE 查看当前数据库key的数量</li>
+<li>Flushdb：清空当前数据库，</li>
+<li>flushall:清空所有数据库</li>
+<li>Keys , * keys k?    问号表示占位符</li>
+<li>move key [num] ：把key从当前数据库移动到目标库</li>
+<li>Exists key:判断key是否存在</li>
+<li>Ttl key :查看key的剩余有效时间，-1表示永不过期，-2表示已经过期</li>
+<li>Expire key seconds:为给定的key设置过期的事件</li>
+<li>Type key:查看key的类型</li>
+</ul>
+<h2 id="三-Redis的五大常用数据类型（-重要-）"><a href="#三-Redis的五大常用数据类型（-重要-）" class="headerlink" title="三.Redis的五大常用数据类型（&#x3D;&#x3D;重要&#x3D;&#x3D;）"></a>三.Redis的五大常用数据类型（&#x3D;&#x3D;重要&#x3D;&#x3D;）</h2><ul>
+<li>string（字符串）</li>
+</ul>
+<p>string是二进制安全的，是可以存放任何的数据的，包括图片</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">set k1 100  #设置key值</span><br><span class="line">get key #获取指定key值</span><br><span class="line">mset k11 value1 k12 value2 k13 value3 k14 value4 #set只能设置一对keyvalue，mset可以一次性设置多对</span><br><span class="line">mget k11 k12 k13 k14#get只能获取一对key value 而mget可以一次性获取多对</span><br><span class="line"></span><br><span class="line">getrange key start end #获取从start开始end结束的key的字串 左闭右闭区间</span><br><span class="line">getrange key 0 -1 #获取整个key的value，支持负数下标</span><br><span class="line">setrange key offset newValue #将key的value值，从offset开始设置为newValue</span><br><span class="line">setrange key 0 haha #将从0的位置开始，用后面的字符串覆盖原来的字串，例如原来是wangdaowuhan 执行完指令后变为 hahadaowuhan   如果后续的字符串比原来的字符串更长，那就会把旧字符串全部覆盖</span><br><span class="line"></span><br><span class="line">getset key value#把key获取出来设置为value</span><br><span class="line"></span><br><span class="line">settex key seconds value #将value关联到key，并设置过期时间</span><br><span class="line"></span><br><span class="line">incr/incrby key [num] #对value值加1/加num,value必须是数字</span><br><span class="line">incr key #每次将key的值加1</span><br><span class="line">incr key num #每次将key的值加num</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Hash(字典)</li>
+</ul>
+<p>是一个string类型得key  : (field:child) ,他的值存得也是一对键值对，键值对里套键值对</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hset key field value #插入一个键值对 </span><br><span class="line">hmset key field1 value1 field2 value2 field3 value3 #插入多对键值对</span><br><span class="line"></span><br><span class="line">hget key field #获取field对应得value值</span><br><span class="line">hmget  key field field field#获取key下存储的多对键值</span><br><span class="line">hkeys key #获取key下得field值</span><br><span class="line">hvals key #获取key下得val值</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>List(列表)</li>
+</ul>
+<p>类似于双向链表，但是没有前后之分，只有左右之分，并且<strong>支持下标</strong>操作的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">lpush key value vlaue value #相当于头插法</span><br><span class="line">rpush key value value value#相当于尾插法</span><br><span class="line"></span><br><span class="line">lpop/rpop #在左右两边进行删除</span><br><span class="line"></span><br><span class="line">lrange key start stop#获取列表指定范围内的元素，start是起始下标，stop是结束下标</span><br><span class="line"></span><br><span class="line">lindex key index #通过下标获取列表中的元素</span><br><span class="line">lset key index value #将下标为index的值设置为value</span><br><span class="line"></span><br><span class="line">lrem key count value #从队头开始删除count个value,cout可以大于列表中的value的个数，相当于把所有等于value的值都删除</span><br><span class="line">linsert ket before/after pivot value  #在列表的pivot值得前面或者后面插入一个元素</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>Set(集合)</li>
+</ul>
+<p>集合，底层使用得是哈希表实现的，元素是唯一的。和stl得set是不同得没有去重</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">sadd key value value vlaue #向集合添加一个或多个元素</span><br><span class="line"></span><br><span class="line">smembers key #返回集合中得所有成员</span><br><span class="line"></span><br><span class="line">scard key #获取集合得成员数</span><br><span class="line"></span><br><span class="line">sismember ky member #半段member元素是否是集合key中得元素</span><br><span class="line"></span><br><span class="line">smove source destination member #将member元素从source集合移动到destination</span><br><span class="line"></span><br><span class="line">#可以在集合中取交集，差集，并集</span><br><span class="line">sdiff key1 key2 #出现在key1中没有出现在key2中</span><br><span class="line">sinter key1 key2#取交集</span><br><span class="line">sunion key1 key2 #取并集</span><br><span class="line"></span><br><span class="line">srandmember key count #每次从key中随机选出count个元素</span><br><span class="line"></span><br><span class="line">spop key count #每次从key中随机删除count个元素</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>Sorted Set(有序集合)</li>
+</ul>
+<p>zset，会使用<strong>double类型分数</strong>，给每个元素设置权重，然后元素会根据权重进行排序，权重是可以重复得，元素是不能重复的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zadd key score1 member1 socre2 member2 #socre1表示权重，member表示要插入得元素</span><br><span class="line">zrange key start end #通过索引区间返回有序集合指定区间内得成员</span><br><span class="line">zrange key satrt end withscores #不仅返回元素，还会把权重值也一起打出来</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-redis配置文件"><a href="#四-redis配置文件" class="headerlink" title="四.redis配置文件"></a>四.redis配置文件</h2><ol>
+<li><p>配置文件的路径</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/redis下面有个文件名为 6379.conf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>杀死redis服务器</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kill -9 进程id号</span><br><span class="line">或者直接在客户端中直接执行shutdown命令</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如何启动redis服务器</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis-server + 配置文件的路径</span><br><span class="line">sudo redis-server /etc/redis/6379.conf</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="五-持久化-重要"><a href="#五-持久化-重要" class="headerlink" title="五.持久化(&#x3D;&#x3D;重要&#x3D;&#x3D;)"></a>五.持久化(&#x3D;&#x3D;重要&#x3D;&#x3D;)</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h3><p>将内存中的数据定期的备份到磁盘中，下一次重启的时候就可以将磁盘中的数据恢复到内存中。（防止数据丢失）</p>
+<h3 id="2-分类"><a href="#2-分类" class="headerlink" title="2.分类"></a>2.分类</h3><ul>
+<li><p>RDB:将当前数据保存到硬盘里（原理是将Redis在内存中的数据库记录定时dump到磁盘上的RBD持久化）</p>
+</li>
+<li><p>AOF:将每次执行的<strong>写命令</strong>保存到磁盘（原理是将Redis的操作日志以追加的方式写入文件，类似于MySQL的binog）</p>
+</li>
+</ul>
+<h3 id="3-RDB持久化"><a href="#3-RDB持久化" class="headerlink" title="3.RDB持久化"></a>3.RDB持久化</h3><h4 id="3-1基本概念"><a href="#3-1基本概念" class="headerlink" title="3.1基本概念"></a>3.1基本概念</h4><p>RBD是Redis默认的持久化方案，在指定的时间间隔内， 执行指定次数的写操作，则会将内存中的数据写入到磁盘中。即在指定目录下生成一个dump.rdb文件，Redis重启会通过加载dump.rbd文件恢复数据</p>
+<h4 id="3-2触发快照方式"><a href="#3-2触发快照方式" class="headerlink" title="3.2触发快照方式"></a>3.2触发快照方式</h4><ol>
+<li>执行shutdown关闭服务器会触发快照，也就是修改dump.rdb文件的修改时间</li>
+<li>执行flushall情况数据库，也会出发快照</li>
+<li>手动执行save命令或者bgsave可以触发快照，将数据保存到磁盘中</li>
+<li>&#x3D;&#x3D;在指定的时间间隔内，执行指定次数的写操作（最重要&#x3D;&#x3D;），自动触发快照</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">14:30:40的时候执行了一次save命令，这个时候文件最后修改时间就成了14：30：40了，然后执行两次写操作，等时间达到了14：31：00的时候，文件dump.rdb的修改时间依旧是14：30，但是等事件到达30S的时候，就是说到了14:30:10之后再查看，文件dump.rbd的最后修改时间已经变成14：31了</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3优缺点"><a href="#3-3优缺点" class="headerlink" title="3.3优缺点"></a>3.3优缺点</h4><p>优点：</p>
+<ul>
+<li>如果对数据的完整性与一致性要求不高，可以使用RDB的持久化方式</li>
+<li>相对于AOF而言，数据的恢复速度是比较快的</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>进行数据恢复的时候，数据的完整性和一致性不高，可能会丢失60s的数据（自动触发快照的缺陷）</li>
+<li>备份时占用内存，redis在备份的时候会独立创建一个fork子进程，将数据写入到一个临时文件（这时候数据在内存中就存有两份），最后将临时文件替换为之前的备份文件</li>
+</ul>
+<h3 id="4-AOF持久化"><a href="#4-AOF持久化" class="headerlink" title="4.AOF持久化"></a>4.AOF持久化</h3><h4 id="4-1概念"><a href="#4-1概念" class="headerlink" title="4.1概念"></a>4.1概念</h4><p>将所有执行的<strong>写命令</strong>全部记录下来，然后数据恢复的时候，再将写命令重新执行一次</p>
+<h4 id="4-2重写"><a href="#4-2重写" class="headerlink" title="4.2重写"></a>4.2重写</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set k1 100</span><br><span class="line">incr k1 #执行100次</span><br><span class="line">这样写命令执行了101次，最终k1的值是200</span><br><span class="line">重写是指将上述的命令合并为</span><br><span class="line">set k1 200 #把101条命令重写为了一条</span><br></pre></td></tr></table></figure>
+
+<p>重写之后就可以让文件的大小减少</p>
+<h4 id="4-3触发重写的方法"><a href="#4-3触发重写的方法" class="headerlink" title="4.3触发重写的方法"></a>4.3触发重写的方法</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行bgrewriteaof 命令</span><br></pre></td></tr></table></figure>
+
+<p>redis会记录上次重写时的AOF大小，默认配置是当“AOF文件的大小是上次的rewirte后大小的一倍，且文件大于64M时触发”</p>
+<p>例如上次文件的大小时33M 下次大小是66M，就会自动触发重写</p>
+<h4 id="4-4优缺点"><a href="#4-4优缺点" class="headerlink" title="4.4优缺点"></a>4.4优缺点</h4><p>优点：</p>
+<ul>
+<li>相对于rdb而言，数据的完整性与一致性高。</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>因为采用的是命令追加的形式，有可能导致文件的体积比较大</li>
+<li>相对于rdb而言，数据的恢复速率是比较慢的</li>
+</ul>
+<h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5.总结"></a>5.总结</h3><ul>
+<li>如果想要数据恢复快，可以选择rdb持久化；如果想要精度比较高，可以选择aof</li>
+<li>两种持久化的方式是可以同时存在，起到互补的作用</li>
+<li>如果单独的以aof持久化的方式，也是可以让服务器启动成功的</li>
+<li>如果只有aof持久化的方式，并且aof文件被损坏了，redis服务器是启动不成功的</li>
+</ul>
+<p>aof文件损坏可以使用<code>redis-check-aof --fix 文件名</code>命令来修复文件</p>
+<h2 id="六-redis事务"><a href="#六-redis事务" class="headerlink" title="六.redis事务"></a>六.redis事务</h2><h3 id="1-概念-1"><a href="#1-概念-1" class="headerlink" title="1.概念"></a>1.概念</h3><p>一组命令的集合，一个事务中的所有命令都会序列化，按顺序的串行化执行，而不会被其他命令加塞</p>
+<h3 id="2-三个阶段"><a href="#2-三个阶段" class="headerlink" title="2.三个阶段"></a>2.三个阶段</h3><p>开始事务、命令入队、执行事务</p>
+<h3 id="3-事务的命令"><a href="#3-事务的命令" class="headerlink" title="3.事务的命令"></a>3.事务的命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">multi #标记一个事务块的开始</span><br><span class="line">exec  #执行所有事务块内的命令</span><br><span class="line"></span><br><span class="line">discard #取消事务，放弃执行事务块内的所有命令</span><br><span class="line"></span><br><span class="line">watch key key... #监视一个或多个key,如果在事务执行之前这个key被其他命令所改动，那么事务将会被打断</span><br></pre></td></tr></table></figure>
+
+<p>如果事务中有命令执行失败的话（运行时报错），那么他的前后命令也不会受到影响，依然可以正常执行，说明redis的事务不具备原子性（mysql的事务具备原子性，只要有执行执行失败，那么整个事务的命令就会全部失败）</p>
+<p>但是如果事务中有命令有语法错误（编译时报错），那么整个事务都会执行失败，编译的时候就失败了</p>
+<p>&#x3D;&#x3D;总结：redis中的事务是没有原子性的&#x3D;&#x3D;</p>
+<h3 id="4-乐观锁和悲观锁"><a href="#4-乐观锁和悲观锁" class="headerlink" title="4.乐观锁和悲观锁"></a>4.乐观锁和悲观锁</h3><p>悲观锁：每次拿数据的时候都认为其他的线程或者进程会修改数据，所以需要进行加锁，例如在linux上学习到的pthread_mutex_t的锁，在c++学到的std::mutex都属于悲观锁，</p>
+<p>乐观锁（无锁）：每次去拿数据的时候都认为其他的线程或者进程不会修改数据，所以就不需要上锁。实现乐观锁的两种方法：</p>
+<ul>
+<li>版本号机制</li>
+<li>CAS机制</li>
+</ul>
+<h2 id="七-主从复制（-比较重要-）"><a href="#七-主从复制（-比较重要-）" class="headerlink" title="七.主从复制（&#x3D;&#x3D;比较重要&#x3D;&#x3D;）"></a>七.主从复制（&#x3D;&#x3D;比较重要&#x3D;&#x3D;）</h2><h3 id="7-1概念"><a href="#7-1概念" class="headerlink" title="7.1概念"></a>7.1概念</h3><p>指将一台Redis服务器的数据复制到其他的Redis服务器，。前者称为主节点，后者称为从节点，数据的复制是<strong>单向的</strong>，只能由主节点到从节点</p>
+<h3 id="7-2为什么要做主从复制"><a href="#7-2为什么要做主从复制" class="headerlink" title="7.2为什么要做主从复制"></a>7.2为什么要做主从复制</h3><p>达到负载均衡、数据的恢复（防止主机挂掉之后，不能响应请求）、读写分离</p>
+<h3 id="7-3主从复制常用模式"><a href="#7-3主从复制常用模式" class="headerlink" title="7.3主从复制常用模式"></a>7.3主从复制常用模式</h3><p>一主多从，一台主机 多台从机</p>
+<p>击鼓传花，主机复制给从机，丛机又成为主机复制给下一台从机</p>
+<h3 id="7-4主从复制的配置方法"><a href="#7-4主从复制的配置方法" class="headerlink" title="7.4主从复制的配置方法"></a>7.4主从复制的配置方法</h3><p>1.首先进入到&#x2F;etc&#x2F;redis下面，将6379.conf拷贝两份，分别取名6380.conf与6381.conf</p>
+<p>2.修改6380.conf与6381.conf文件中的以下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">port 6380/6381</span><br><span class="line">pidfile &quot;/var/run/redis_6380/6381.pid&quot;</span><br><span class="line">logfile &quot;var/log/redis_6380/6381.log&quot;</span><br><span class="line">dbfilename &quot;dump6380/6381.rdb&quot;</span><br><span class="line">appendfilename &quot;appendonly6380/6381.aof&quot;</span><br></pre></td></tr></table></figure>
+
+<p>3.将三个配置文件进行启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo redis-server /etc/redis/6379.conf</span><br><span class="line">sudo redis-server /etc/redis/6380.conf</span><br><span class="line">sudo redis-server /etc/redis/6381.conf</span><br></pre></td></tr></table></figure>
+
+<p>4.分别进入对应的服务器的客户端下面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 6379</span><br><span class="line">redis-cli -p 6380</span><br><span class="line">redis-cli -p 6381</span><br></pre></td></tr></table></figure>
+
+<p>5.查看每台机器的身份信息，发现默认都是主机</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">info replication #命令可以查看每台机器的身份，每台机器默认都认为自己是一台主机 role字段显示的都是master</span><br></pre></td></tr></table></figure>
+
+<p>6.开始配置主从复制的关系</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#在从机执行命令</span><br><span class="line">slaveof 127.0.0.1 6379 #成为了6379的从机</span><br><span class="line"></span><br><span class="line">#再查看主从复制的信息,就发现从机上可以看到主机的IP，port以及状态信息，在主机上也可以看到从机的ip,port以及状态信息</span><br></pre></td></tr></table></figure>
+
+<p>在主机上写命令，从机立刻就可以感知到，那么在从机上可以写数据吗？</p>
+<p>不可以，因为数据的复制是单向的。</p>
+<ul>
+<li>如果从机6381断开了，然后主机6379就不会记录6381的信息了，即使6381重新启动，6379也不会记录6381的信息，因为6381重新启动的时候，是以主机的身份启动的</li>
+<li>如果主机因为某些原因挂掉了，那么从机6380和6381会感知到6379的下线，同时会记录主机的状态为down，但是还是会默默的等待主机的上线，当主机6379上线之后，6379依旧会作为主机，然后6380和6381就依旧是6379的从机</li>
+</ul>
+<p>如果主机挂掉永不上线，那么基本的主从复制关系就不能执行写操作，因为没有主机</p>
+<p>反客为主</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof no one #恢复主权 不是任何机器的从机</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="八-哨兵模式"><a href="#八-哨兵模式" class="headerlink" title="八.哨兵模式"></a>八.哨兵模式</h2><p>会执行流言协议和投标协议来决定是否执行自动故障迁移，以及选择哪个从服务器作为新的主服务器</p>
+<h3 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h3><p>1.在&#x2F;etc&#x2F;redis下新建哨兵配置文件sentinel.conf</p>
+<p>编辑该文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#哨兵     监视     主机名      主机ip      端口号  票数</span><br><span class="line">sentinel monitor  master6379  127.0.0.1 6379    1</span><br></pre></td></tr></table></figure>
+
+<p>2.启动哨兵的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo redis-sentinel /etc/redis/sentinel.conf</span><br></pre></td></tr></table></figure>
+
+<p>3.哨兵会监视主机6379的状态变更，如果6379因为某些原因断开，那么哨兵会将自己的一票投递给6380或者6381，谁得到这一票谁就是新的主机，所以新的主从复制状态就展示出来了，这样就可以解决传统的主从复制，因为主机断掉而不能执行写操作的弊端。</p>
+<h2 id="九-常见问题"><a href="#九-常见问题" class="headerlink" title="九.常见问题"></a>九.常见问题</h2><h3 id="9-1缓存雪崩"><a href="#9-1缓存雪崩" class="headerlink" title="9.1缓存雪崩"></a>9.1缓存雪崩</h3><p>概念：<strong>缓存中的大量数据在同一时间失效</strong>，此时相当于没有缓存，那么客户端的请求会下沉到底层数据库上面，那么有可能会导致底层数据库的压力比较大，甚至将底层数据库压垮。</p>
+<p>解决办法：</p>
+<ol>
+<li>可以让key值不过期或延迟过期时间</li>
+<li>将key的过期时间分散</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/pk4JHqU"><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/07/12/pk4JHqU.png" alt="pk4JHqU.png"></a></p>
+<h3 id="9-2缓存击穿"><a href="#9-2缓存击穿" class="headerlink" title="9.2缓存击穿"></a>9.2缓存击穿</h3><p>概念：对于某一个<strong>超高频率的访问数据失效了</strong>，大量访问请求会下沉到底层数据库上，导致数据库压力骤升，甚至将底层数据库压垮。</p>
+<p>解决办法：</p>
+<ol>
+<li>延缓热点数据失效的时间甚至不失效</li>
+<li>可以将底层数据库看成共享资源，互斥的访问数据库<br> <a target="_blank" rel="noopener" href="https://imgse.com/i/pk4JqZF"><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/07/12/pk4JqZF.png" alt="pk4JqZF.png"></a></li>
+</ol>
+<h3 id="9-3缓存穿透"><a href="#9-3缓存穿透" class="headerlink" title="9.3缓存穿透"></a>9.3缓存穿透</h3><p>概念：<strong>要访问的数据在redis和底层数据库中都没有</strong>，那么还是会对底层数据库的压力比较大，导致有可能将底层数据库压垮</p>
+<p>解决方案：</p>
+<ol>
+<li>在缓存中设置键值对形式&lt;key,null&gt;,如果对应的value是null就直接返回，就不需要访问底层数据库了</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://imgse.com/i/pk4JLa4"><img src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/07/12/pk4JLa4.png" alt="pk4JLa4.png"></a></p>
+<p><strong>代码中使用redis编译指令</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ *.cc -lhiredis -pthread -std=c++17</span><br></pre></td></tr></table></figure>
+
+<h2 id="晚上的一些练习"><a href="#晚上的一些练习" class="headerlink" title="晚上的一些练习"></a>晚上的一些练习</h2><h3 id="Q-什么是Redis-有哪些有优缺点？"><a href="#Q-什么是Redis-有哪些有优缺点？" class="headerlink" title="Q:什么是Redis?有哪些有优缺点？"></a>Q:什么是Redis?有哪些有优缺点？</h3><p>redis是典型的非关系型数据库，存放数据的时候使用的是键值对的形式。</p>
+<p>redis是远程字典服务器的单词的缩写，使用c语言编写的，并且是开源的，性能比较高，它可以用作数据库、缓存和消息中间件，他是基于内存运行的，并支持持久化的NoSQL数据库</p>
+<p>优点：</p>
+<p>性能极高，每秒钟可以读11w次，每秒钟可以写8.1W</p>
+<p>支持丰富的数据类型</p>
+<p>原子性</p>
+<p>丰富的特性：发布订阅，key过期</p>
+<p>缺点：</p>
+<p>内存限制：Redis的数据存储在内存中，受到内存容量的限制，适合存储较小量但频繁访问的数据。</p>
+<p>单线程模型：Redis的主要工作模式是单线程，虽然可以通过多路复用技术提高并发性能，但是在处理大规模并发请求时可能会存在性能瓶颈</p>
+<p>数据持久化的效率：尽管Redis支持持久化，但是在某些情况下，持久化会对性能产生一定的影响。</p>
+<p>复杂的数据结构操作：虽然Redis支持丰富的数据结构，但有时处理复杂数据结构的操作会稍显复杂，需要开发者深入理解Redis的数据模型和命令</p>
+<h3 id="Q-为什么要用-Redis-为什么要用缓存"><a href="#Q-为什么要用-Redis-为什么要用缓存" class="headerlink" title="Q:为什么要用 Redis &#x2F;为什么要用缓存"></a>Q:为什么要用 Redis &#x2F;为什么要用缓存</h3><p>提高性能：缓存可以显著提高应用程序的性能，通过将频繁访问的数据存储在内存中，可以大大减少读取数据的时间。</p>
+<p>减轻数据库压力：将数据库的读取压力分散到缓存中，可以降低数据库的负载，这对高并发的应用程序特别重要，因为数据库通常是性能瓶颈之一</p>
+<p>提升可扩展性：缓存可以帮助应用程序更好地扩展，通过减少对数据库地直接访问，可以更容易地在需要时增加应用程序地实例数，从而处理更多地请求</p>
+<p>降低成本：使用缓存可以降低系统运行地硬件成本，因为缓存可以减少对昂贵硬件资源地需求，同时也能减少云服务器地使用费用</p>
+<p>提高用户体验：响应速度快意味着用户能够更快的获取数据和内容，从而提升用户体验，快速地页面加载和响应时间可以显著提升用户满意度和留存率</p>
+<p>支持临时数据存储需求：缓存不仅可以用于存储数据库查询结果，还可以用于存储临时数据，这些数据通常不需要长期存储在数据库中，但需要在短时间内频繁访问</p>
+<h3 id="Q-Redis为什么这么快"><a href="#Q-Redis为什么这么快" class="headerlink" title="Q:Redis为什么这么快"></a>Q:Redis为什么这么快</h3><p>Redis之所以能够如此快速，主要有以下几个关键原因：</p>
+<p>\1. 数据存储在内存中： Redis主要将数据存储在内存中，这使得数据的读取和写入操作非常快速。与传统的基于磁盘存储的数据库相比，内存的访问速度要快得多。</p>
+<p>\2. 非阻塞的单线程模型：Redis采用单线程模型来处理客户端请求，这意味着不需要像多线程或多进程那样频繁地进行上下文切换和锁机制，减少了系统的开销。此外，Redis使用了I&#x2F;O多路复用机制来处理并发请求，有效地提高了系统的并发处理能力。</p>
+<p>\3. 高效的数据结构：Redis内置了多种高效的数据结构，如字符串、哈希表、列表、集合、有序集合等。这些数据结构在内存中的操作都经过精心优化，使得它们可以高效地支持各种操作，如插入、删除、查找和排序等。</p>
+<p>\4. 精简的功能集: Redis专注于提供高性能、低延迟的数据访问服务，因此在设计上避免了复杂的功能和不必要的开销。它的核心功能和特性相对较少，但每一个特性都经过深思熟虑和优化。</p>
+<p>\5. 异步方式的持久化： Redis的持久化可以通过快照和日志方式来进行，而且持久化操作通常是异步执行的，不会阻塞主线程的操作。这样可以保证在大部分情况下，持久化操作不会影响Redis的性能。</p>
+<p>综上所述，Redis在设计和实现上注重性能和效率，利用内存存储、非阻塞的单线程模型、高效的数据结构以及精简的功能集，使得它能够提供出色的读写性能和响应速度。</p>
+<h3 id="Q-Redis有哪些常用数据类型"><a href="#Q-Redis有哪些常用数据类型" class="headerlink" title="Q:Redis有哪些常用数据类型"></a>Q:Redis有哪些常用数据类型</h3><p>string ,list, set, sort set,hash</p>
+<h3 id="Q-什么是Redis持久化？"><a href="#Q-什么是Redis持久化？" class="headerlink" title="Q:什么是Redis持久化？"></a>Q:什么是Redis持久化？</h3><p>将内存中的数据定期的备份到磁盘中，下一次重启的时候就可以将磁盘中的数据恢复到内存中。（防止数据丢失）</p>
+<h3 id="Q-Redis-的持久化机制是什么？各自的优缺点？"><a href="#Q-Redis-的持久化机制是什么？各自的优缺点？" class="headerlink" title="Q:Redis 的持久化机制是什么？各自的优缺点？"></a>Q:Redis 的持久化机制是什么？各自的优缺点？</h3><ul>
+<li>RDB:将当前数据保存到硬盘里（原理是将Redis在内存中的数据库记录定时dump到磁盘上的RBD持久化）</li>
+<li>AOF:将每次执行的<strong>写命令</strong>保存到磁盘（原理是将Redis的操作日志以追加的方式写入文件，类似于MySQL的binog）</li>
+</ul>
+<p>RDB持久化：</p>
+<p>优点：</p>
+<ul>
+<li>如果对数据的完整性与一致性要求不高，可以使用RDB的持久化方式</li>
+<li>相对于AOF而言，数据的恢复速度是比较快的</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>进行数据恢复的时候，数据的完整性和一致性不高，可能会丢失60s的数据（自动触发快照的缺陷）</li>
+</ul>
+<p>AOF持久化：</p>
+<p>优点：</p>
+<ul>
+<li>相对于rdb而言，数据的完整性与一致性高。</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>因为采用的是命令追加的形式，有可能导致文件的体积比较大</li>
+<li>相对于rdb而言，数据的恢复速率是比较慢的</li>
+</ul>
+<h3 id="Q-Redis-key的过期时间和永久有效分别怎么设置？"><a href="#Q-Redis-key的过期时间和永久有效分别怎么设置？" class="headerlink" title="Q:Redis key的过期时间和永久有效分别怎么设置？"></a>Q:Redis key的过期时间和永久有效分别怎么设置？</h3><p>设置过期时间</p>
+<ol>
+<li><strong>使用 EXPIRE 命令</strong>：<ul>
+<li>使用命令格式：<code>EXPIRE key seconds</code></li>
+<li>示例：将名为 <code>mykey</code> 的key设置为在60秒后过期：<code>EXPIRE mykey 60</code></li>
+<li>这样设置后，60秒后，Redis会自动删除该key。</li>
+</ul>
+</li>
+<li><strong>使用 PEXPIRE 命令</strong>：<ul>
+<li>使用命令格式：<code>PEXPIRE key milliseconds</code></li>
+<li>示例：将名为 <code>mykey</code> 的key设置为在60000毫秒（即60秒）后过期：<code>PEXPIRE mykey 60000</code></li>
+<li>这个命令与EXPIRE类似，但是时间单位是毫秒。</li>
+</ul>
+</li>
+</ol>
+<p>设置永久有效（取消过期时间）</p>
+<ol>
+<li><p>使用 PERSIST 命令</p>
+<p> ：</p>
+<ul>
+<li>使用命令格式：<code>PERSIST key</code></li>
+<li>示例：取消名为 <code>mykey</code> 的key的过期时间：<code>PERSIST mykey</code></li>
+<li>这样设置后，<code>mykey</code> 将永久保存在Redis中，不会自动删除。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Q-Redis事务的概念？Redis事务的三个阶段？Redis事务相关命令和事务的特征？"><a href="#Q-Redis事务的概念？Redis事务的三个阶段？Redis事务相关命令和事务的特征？" class="headerlink" title="Q:Redis事务的概念？Redis事务的三个阶段？Redis事务相关命令和事务的特征？"></a>Q:Redis事务的概念？Redis事务的三个阶段？Redis事务相关命令和事务的特征？</h3><p>概念：一组命令的集合，一个事务中的所有命令都会序列化，按顺序的串行化执行，而不会被其他命令加塞</p>
+<p>三各阶段：开始事务、命令入队、执行事务</p>
+<p>相关命令：</p>
+<p>multi #标记一个事务块的开始<br>exec #执行所有事务块内的命令</p>
+<p>discard #取消事务，放弃执行事务块内的所有命令</p>
+<ul>
+<li><strong>批量操作：</strong> Redis事务允许将多个命令打包发送给服务器执行，客户端可以一次性发送多条命令到Redis服务器，然后一起执行，这样可以减少网络延迟。</li>
+<li><strong>隔离性：</strong> Redis事务默认是隔离的，即在同一个事务中的命令不会受到其他客户端的影响，保证了多个事务同时执行时彼此不受影响。</li>
+<li><strong>一致性：</strong> Redis事务在执行过程中，中间状态不会对其他客户端可见，只有在事务提交之后，其他客户端才能看到事务所做的修改。</li>
+<li><strong>事务队列：</strong> Redis事务使用队列来缓存收到的命令，而不是立即执行，这样在事务执行过程中，其他客户端仍然可以执行命令，但不会影响到正在执行的事务。</li>
+<li><strong>回滚操作：</strong> 在事务执行过程中，如果某个命令执行失败或者发生错误，Redis会自动回滚这个事务，之前的命令不会生效，保证了数据的一致性。</li>
+<li><strong>命令的执行方式：</strong> Redis事务并不是像传统数据库中的事务那样执行一系列命令后统一提交或回滚，而是在执行 EXEC 命令时才真正执行事务中的所有命令。因此，事务中的命令并不是立即执行的，而是暂时保存在队列中，直到执行 EXEC 命令才会一起执行。</li>
+</ul>
+<h3 id="Q-缓存穿透是什么？如何解决？缓存击穿是什么？有什么解决方案？缓存雪崩的概念？如何应对？"><a href="#Q-缓存穿透是什么？如何解决？缓存击穿是什么？有什么解决方案？缓存雪崩的概念？如何应对？" class="headerlink" title="Q:缓存穿透是什么？如何解决？缓存击穿是什么？有什么解决方案？缓存雪崩的概念？如何应对？"></a>Q:缓存穿透是什么？如何解决？缓存击穿是什么？有什么解决方案？缓存雪崩的概念？如何应对？</h3><p>缓存雪崩：<strong>缓存中的大量数据在同一时间失效</strong>，此时相当于没有缓存，那么客户端的请求会下沉到底层数据库上面，那么有可能会导致底层数据库的压力比较大，甚至将底层数据库压垮。</p>
+<p>解决：</p>
+<ol>
+<li>可以让key值不过期或延迟过期时间</li>
+<li>将key的过期时间分散</li>
+</ol>
+<p>缓存击穿：对于某一个<strong>超高频率的访问数据失效了</strong>，大量访问请求会下沉到底层数据库上，导致数据库压力骤升，甚至将底层数据库压垮。</p>
+<p>解决：</p>
+<ol>
+<li>延缓热点数据失效的时间甚至不失效</li>
+<li>可以将底层数据库看成共享资源，互斥的访问数据库</li>
+</ol>
+<p>缓存穿透：<strong>要访问的数据在redis和底层数据库中都没有</strong>，那么还是会对底层数据库的压力比较大，导致有可能将底层数据库压垮</p>
+<p>解决：在缓存中设置键值对形式&lt;key,null&gt;,如果对应的value是null就直接返回，就不需要访问底层数据库了</p>
+<h3 id="Q-封装hiredis的封装"><a href="#Q-封装hiredis的封装" class="headerlink" title="Q:封装hiredis的封装"></a>Q:封装hiredis的封装</h3><p>hiredis</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> MYHIREDIS</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MYHIREDIS </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;hiredis/hiredis.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span> </span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyHiredis</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyHiredis</span>();</span><br><span class="line">    ~<span class="built_in">MyHiredis</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set</span><span class="params">(<span class="type">const</span> string ,<span class="type">const</span> string )</span></span>;</span><br><span class="line">    <span class="function">string <span class="title">get</span><span class="params">(<span class="type">const</span> string )</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">connection</span><span class="params">(<span class="type">const</span> string ip,<span class="type">int</span> port)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    redisContext * _redisContext;</span><br><span class="line">    redisReply * _redisReply;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;1_MyHiredis.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line">MyHiredis::<span class="built_in">MyHiredis</span>()</span><br><span class="line">:_redisContext(<span class="literal">nullptr</span>)</span><br><span class="line">,_redisReply(<span class="literal">nullptr</span>)</span><br><span class="line">&#123;&#125;</span><br><span class="line">MyHiredis::~<span class="built_in">MyHiredis</span>()&#123;</span><br><span class="line">    <span class="keyword">if</span>(_redisContext)&#123;</span><br><span class="line">        <span class="built_in">redisFree</span>(_redisContext);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(_redisReply)&#123;</span><br><span class="line">        <span class="built_in">freeReplyObject</span>(_redisReply);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyHiredis::connection</span><span class="params">(<span class="type">const</span> string ip,<span class="type">int</span> port)</span></span>&#123;</span><br><span class="line">    _redisContext = <span class="built_in">redisConnect</span>(ip.<span class="built_in">c_str</span>(),port);</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">nullptr</span> == _redisContext)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(_redisContext-&gt;err)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(_redisContext-&gt;errstr);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyHiredis::set</span><span class="params">(<span class="type">const</span> string  key,<span class="type">const</span> string  value)</span></span>&#123;</span><br><span class="line">    _redisReply = (redisReply *)<span class="built_in">redisCommand</span>(_redisContext,<span class="string">&quot;SET %s %s&quot;</span>,key.<span class="built_in">c_str</span>(),value.<span class="built_in">c_str</span>());</span><br><span class="line">    <span class="keyword">if</span>(!_redisReply)&#123;</span><br><span class="line">        <span class="built_in">freeReplyObject</span>(_redisReply);</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;set error&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(_redisContext-&gt;err)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;set error&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function">string <span class="title">MyHiredis::get</span><span class="params">(<span class="type">const</span> string  key)</span></span>&#123;</span><br><span class="line">    _redisReply = (redisReply *)<span class="built_in">redisCommand</span>(_redisContext,<span class="string">&quot;GET %s&quot;</span>,key.<span class="built_in">c_str</span>());</span><br><span class="line">    <span class="keyword">if</span>(!_redisReply)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;get error&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;data error&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(_redisContext-&gt;err)&#123;</span><br><span class="line">        <span class="built_in">perror</span>(<span class="string">&quot;get error&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;data error&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">string</span>(_redisReply-&gt;str);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;1_MyHiredis.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">    MyHiredis hir;</span><br><span class="line">    hir.<span class="built_in">connection</span>(<span class="string">&quot;127.0.0.1&quot;</span>,<span class="number">6379</span>);</span><br><span class="line">    hir.<span class="built_in">set</span>(<span class="string">&quot;key1&quot;</span>,<span class="string">&quot;100&quot;</span>);</span><br><span class="line">    cout &lt;&lt; hir.<span class="built_in">get</span>(<span class="string">&quot;key1&quot;</span>) &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">test</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author_group"><a class="post-copyright__author_img" href="/huyue.github.io/about/"><img class="post-copyright__author_img_front" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/MiYouShe"></a><div class="post-copyright__author_name">The Yue</div><div class="post-copyright__author_desc"></div></div><div class="post-tools" id="post-tools"><div class="post-tools-left"><div id="quit-box" onclick="RemoveRewardMask()"></div></div></div><div class="post-copyright__notice"><span class="post-copyright-info">本文是原创文章，采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0</a>协议，完整转载请注明来自<a href="/huyue.github.io/">The Yue</a></span></div></div><div class="post-tools-right"><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/huyue.github.io/tags/%E7%AC%94%E8%AE%B0/"><span class="tags-punctuation"></span>笔记<span class="tagsPageCount">15</span></a></div></div></div><nav class="needEndHide pagination-post" id="pagination"><div class="next-post pull-full"><a href="/huyue.github.io/2024/07/11/ReactorV3V4V5/"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ReactorV3V4V5</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><div class="author-info__top-group"><div class="author-info__sayhi" id="author-info__sayhi" onclick="sco.changeSayHelloText()">sayhello.morning</div></div></div><div class="avatar-img-group"><img class="avatar-img" alt="头像" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://s21.ax1x.com/2024/04/16/pFxtXtK.png"></div><div class="author-info__description_group"><div class="author-info__description">分享自己对编程的<b>热爱</b>，对美好生活的<b>向往</b>，对知识海洋<b>探索历程</b>。</div><div class="author-info__description2">相信你可以在这里找到对你有用的知识和教程。</div></div><div class="author-info__bottom-group"><a class="author-info__bottom-group-left" target="_blank" rel="noopener" href="https://github.com/hu2271825073/huyue.github.io"><div class="author-info__name">胡越</div><div class="author-info__desc"></div></a><div class="card-info-social-icons is-center"></div></div></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="solitude st-menu-line"></i><span>文章目录</span></div><div class="toc-content" id="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-Redis%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">一.Redis的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8E%E9%9D%9E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">1.关系型数据库与非关系型数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%9D%9E%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-text">2.非关系型数据库的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Redis%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">3.Redis是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-redis%E7%9A%84%E7%89%B9%E6%80%A7"><span class="toc-text">4.redis的特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-redis%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">5.redis的优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-Redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">二.Redis常用命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-Redis%E7%9A%84%E4%BA%94%E5%A4%A7%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%88-%E9%87%8D%E8%A6%81-%EF%BC%89"><span class="toc-text">三.Redis的五大常用数据类型（&#x3D;&#x3D;重要&#x3D;&#x3D;）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">四.redis配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94-%E6%8C%81%E4%B9%85%E5%8C%96-%E9%87%8D%E8%A6%81"><span class="toc-text">五.持久化(&#x3D;&#x3D;重要&#x3D;&#x3D;)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A6%82%E5%BF%B5"><span class="toc-text">1.概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%86%E7%B1%BB"><span class="toc-text">2.分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-RDB%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">3.RDB持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-text">3.1基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2%E8%A7%A6%E5%8F%91%E5%BF%AB%E7%85%A7%E6%96%B9%E5%BC%8F"><span class="toc-text">3.2触发快照方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">3.3优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-AOF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">4.AOF持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1%E6%A6%82%E5%BF%B5"><span class="toc-text">4.1概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2%E9%87%8D%E5%86%99"><span class="toc-text">4.2重写</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3%E8%A7%A6%E5%8F%91%E9%87%8D%E5%86%99%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">4.3触发重写的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">4.4优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5.总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-redis%E4%BA%8B%E5%8A%A1"><span class="toc-text">六.redis事务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A6%82%E5%BF%B5-1"><span class="toc-text">1.概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5"><span class="toc-text">2.三个阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-text">3.事务的命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%B9%90%E8%A7%82%E9%94%81%E5%92%8C%E6%82%B2%E8%A7%82%E9%94%81"><span class="toc-text">4.乐观锁和悲观锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%EF%BC%88-%E6%AF%94%E8%BE%83%E9%87%8D%E8%A6%81-%EF%BC%89"><span class="toc-text">七.主从复制（&#x3D;&#x3D;比较重要&#x3D;&#x3D;）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1%E6%A6%82%E5%BF%B5"><span class="toc-text">7.1概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="toc-text">7.2为什么要做主从复制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%BC%8F"><span class="toc-text">7.3主从复制常用模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="toc-text">7.4主从复制的配置方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F"><span class="toc-text">八.哨兵模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4"><span class="toc-text">配置步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-text">九.常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="toc-text">9.1缓存雪崩</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF"><span class="toc-text">9.2缓存击穿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="toc-text">9.3缓存穿透</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%99%9A%E4%B8%8A%E7%9A%84%E4%B8%80%E4%BA%9B%E7%BB%83%E4%B9%A0"><span class="toc-text">晚上的一些练习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-%E4%BB%80%E4%B9%88%E6%98%AFRedis-%E6%9C%89%E5%93%AA%E4%BA%9B%E6%9C%89%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="toc-text">Q:什么是Redis?有哪些有优缺点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8-Redis-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E7%BC%93%E5%AD%98"><span class="toc-text">Q:为什么要用 Redis &#x2F;为什么要用缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB"><span class="toc-text">Q:Redis为什么这么快</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-Redis%E6%9C%89%E5%93%AA%E4%BA%9B%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">Q:Redis有哪些常用数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-%E4%BB%80%E4%B9%88%E6%98%AFRedis%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9F"><span class="toc-text">Q:什么是Redis持久化？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-Redis-%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%90%84%E8%87%AA%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="toc-text">Q:Redis 的持久化机制是什么？各自的优缺点？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-Redis-key%E7%9A%84%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4%E5%92%8C%E6%B0%B8%E4%B9%85%E6%9C%89%E6%95%88%E5%88%86%E5%88%AB%E6%80%8E%E4%B9%88%E8%AE%BE%E7%BD%AE%EF%BC%9F"><span class="toc-text">Q:Redis key的过期时间和永久有效分别怎么设置？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-Redis%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%A6%82%E5%BF%B5%EF%BC%9FRedis%E4%BA%8B%E5%8A%A1%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5%EF%BC%9FRedis%E4%BA%8B%E5%8A%A1%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%9A%84%E7%89%B9%E5%BE%81%EF%BC%9F"><span class="toc-text">Q:Redis事务的概念？Redis事务的三个阶段？Redis事务相关命令和事务的特征？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F%E6%9C%89%E4%BB%80%E4%B9%88%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9F%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E6%A6%82%E5%BF%B5%EF%BC%9F%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%EF%BC%9F"><span class="toc-text">Q:缓存穿透是什么？如何解决？缓存击穿是什么？有什么解决方案？缓存雪崩的概念？如何应对？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q-%E5%B0%81%E8%A3%85hiredis%E7%9A%84%E5%B0%81%E8%A3%85"><span class="toc-text">Q:封装hiredis的封装</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="solitude st-map-line"></i><span>最近发布</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/07/12/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Redis的基本概念"><img alt="Redis的基本概念" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=341"></a><div class="content"><a class="title" href="/huyue.github.io/2024/07/12/Redis%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Redis的基本概念">Redis的基本概念</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/07/11/ReactorV3V4V5/" title="ReactorV3V4V5"><img alt="ReactorV3V4V5" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=985"></a><div class="content"><a class="title" href="/huyue.github.io/2024/07/11/ReactorV3V4V5/" title="ReactorV3V4V5">ReactorV3V4V5</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/07/10/ReactorV2/" title="ReactorV2"><img alt="ReactorV2" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=799"></a><div class="content"><a class="title" href="/huyue.github.io/2024/07/10/ReactorV2/" title="ReactorV2">ReactorV2</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="计算机网络"><img alt="计算机网络" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=777"></a><div class="content"><a class="title" href="/huyue.github.io/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" title="计算机网络">计算机网络</a></div></div><div class="aside-list-item"><a class="thumbnail" href="/huyue.github.io/2024/07/05/2024-7-5-c++%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="c++线程池"><img alt="c++线程池" src= "/huyue.github.io/img/loading.gif" data-lazy-src="https://api.qjqq.cn/api/Img?sort=acg&amp;random=957"></a><div class="content"><a class="title" href="/huyue.github.io/2024/07/05/2024-7-5-c++%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="c++线程池">c++线程池</a></div></div></div></div></div></div></main><footer id="footer"><div id="st-footer-bar"><div class="footer-logo"><span class="solitude">越の博客</span></div><div class="footer-bar-description">来自The Yue - 的文章</div><a class="footer-bar-link" href="/huyue.github.io/">了解更多</a></div><div id="footer_deal"></div><div id="st-footer"><div class="footer-group"><h3 class="footer-title">导航</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/archives/" title="归档">归档</a><a class="footer-item" href="/huyue.github.io/categories/" title="分类">分类</a><a class="footer-item" href="/huyue.github.io/tags/" title="标签">标签</a></div></div><div class="footer-group"><h3 class="footer-title">服务</h3><div class="footer-links"><a class="footer-item" target="_blank" rel="noopener" href="https://aliyun.com/" title="阿里云">阿里云</a><a class="footer-item" target="_blank" rel="noopener" href="https://v6.51.la/" title="51la统计">51la统计</a><a class="footer-item" target="_blank" rel="noopener" href="https://tongji.baidu.com/" title="百度统计">百度统计</a></div></div><div class="footer-group"><h3 class="footer-title">支持</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/about/" title="打赏记录">打赏记录</a></div></div><div class="footer-group"><h3 class="footer-title">协议</h3><div class="footer-links"><a class="footer-item" href="/huyue.github.io/cookies/" title="Cookies">Cookies</a><a class="footer-item" href="/huyue.github.io/privacy/" title="用户协议">用户协议</a><a class="footer-item" href="/huyue.github.io/copyright/" title="版权协议">版权协议</a></div></div></div><div id="footer-bar"><div class="footer-bar-links"><div class="footer-bar-left"><div class="copyright">© 2024 By&nbsp;<a class="footer-bar-link" href="/huyue.github.io/">胡越</a></div></div><div class="footer-bar-right"><a class="footer-bar-link" target="_blank" rel="noopener" href="https://github.com/hu2271825073/huyue.github.io" alt="主题">主题</a><a class="footer-bar-link cc" href="/huyue.github.io/null" aria-label="copyright"><i class="solitude st-copyright-line"></i><i class="solitude st-creative-commons-by-line"></i><i class="solitude st-creative-commons-nc-line"></i><i class="solitude st-creative-commons-nd-line"></i></a></div></div></div></footer></div><!-- right_menu--><!-- inject body--><div><script src="/huyue.github.io/js/utils.js?v=1.8.6"></script><script src="/huyue.github.io/js/main.js?v=1.8.6"></script><script src="/huyue.github.io/js/third_party/waterfall.min.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pjax/0.2.8/pjax.min.js"></script><script src="/huyue.github.io/js/third_party/universe.min.js?v=1.8.6"></script><script>dark()
+</script><script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/19.1.3/lazyload.iife.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/meting/2.0.1/Meting.min.js"></script><script>const meting_api = 'https://meting.qjqq.cn/?server=:server&type=:type&id=:id&auth=:auth&r=:r';
+</script><script src="/huyue.github.io/js/music.js?v=1.8.6"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script><div class="js-pjax"><script async src="https://cdnjs.cloudflare.com/ajax/libs/busuanzi/2.3.0/bsz.pure.mini.min.js"></script></div></div><!-- newest comment--><!-- pjax--><script>const pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: ['title','#body-wrap','#site-config','meta[name="description"]','.js-pjax','meta[property^="og:"]','#config-diff'],
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+})
+
+document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+})
+
+document.addEventListener('pjax:complete', () => {
+    window.refreshFn()
+
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+        const newScript = document.createElement('script')
+        const content = item.text || item.textContent || item.innerHTML || ""
+        Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+        newScript.appendChild(document.createTextNode(content))
+        item.parentNode.replaceChild(newScript, item)
+    })
+
+    GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+})
+
+document.addEventListener('pjax:error', (e) => {
+    if (e.request.status === 404) {
+        pjax.loadUrl('/404.html')
+    }
+})</script><!-- theme--><script>initTheme = () => {
+    const cachedMode = utils.saveToLocal.get('theme');
+    if (cachedMode === undefined)
+        document.documentElement.setAttribute('data-theme', 'dark');
+    else
+        document.documentElement.setAttribute('data-theme', cachedMode);
+    is_rm && rm.mode(cachedMode === undefined || cachedMode === 'dark')
+}
+initTheme()</script><!-- google adsense--><!-- search--><!-- music--><div class="needEndHide" id="nav-music" onclick="sco.musicToggle()"><div id="nav-music-hoverTips">音乐已暂停</div><meting-js id="584817315" server="netease" type="playlist" mutex="true" preload="none" data-lrctype="0" order="random" theme="var(--efu-main)"></meting-js></div></body></html><script>const posts=["2024/07/12/Redis数据库/","2024/07/11/ReactorV3V4V5/","2024/07/10/ReactorV2/","2024/07/09/计算机网络/","2024/07/05/2024-7-5-c++线程池/","2024/07/05/c++11线程库/","2024/07/02/2024-7-2-面向对象编程/","2024/07/01/2024-7-1-成员函数的适配器于空间配置器/","2024/06/28/2024-6-28-算法库/","2024/06/27/2024-6-27-STL四/","2024/06/26/2024-6-26-STL三/","2024/06/25/2024-6-25-STL二/","2024/06/24/2024-6-24-标准模板库/","2024/06/21/移动语义/","2024/06/21/2024-6-21-资源管理/","2024/06/20/2024-6-20-模板/","2024/06/19/2024-6-19-javaScript的常见类型和事件/","2024/06/19/2024-6-19-多态二/","2024/06/18/2024-6-13-多态/","2024/06/17/2024-6-17-继承/","2024/06/15/2024-6-15-小练习：RSS解析/","2024/06/15/2024-6-15-关联式容器二/","2024/06/14/2024-6-14-关联式容器/","2024/06/14/2024-6-14-stdstring的底层实现/","2024/06/14/2024-6-14-嵌套类二/","2024/06/13/2024-6-13-嵌套类/","2024/06/12/运算符重载二/","2024/06/12/运算符重载/","2024/06/12/日志系统的使用/","2024/06/08/explicit关键字/","2024/06/08/日志系统/","2024/06/08/c++输入输出流/","2024/06/06/leetcodesql_176 Second Highest Salary/","2024/06/04/inline函数/","2024/06/04/虚幻入门/","2024/06/04/引用/","2024/06/03/newdelete表达式/","2024/06/03/const关键字/","2024/05/25/分享会/","2024/05/25/sql语句/","2024/04/23/2024-4-23-常用shell指令-文件相关/","2024/04/23/2024-4-23-小项目-词法分析器/","2024/04/23/gdb调试工具使用手册/","2024/04/20/vim的一些其他操作/","2024/04/20/vim的常用快捷键总结/","2024/04/19/虚拟机扩容方法/","2024/04/18/高级排序算法/","2024/04/18/哈希表-用动态数组实现/","2024/04/17/单例模式/","2024/04/17/三种基本排序算法的实现/","2024/04/17/mrakdown使用说明/"];function toRandomPost(){ pjax.loadUrl('/'+posts[Math.floor(Math.random()*posts.length)]); }</script>
